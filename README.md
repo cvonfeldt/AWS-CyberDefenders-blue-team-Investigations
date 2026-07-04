@@ -1,6 +1,6 @@
 # CyberDefenders Blue Team Investigations Writeups
 
-### A collection of blue team investigations, threat hunting exercises, and incident response case studies focused on real-world SOC workflows. Each investigation documents the analytical process used to identify, investigate, and understand security events through evidence collection, timeline reconstruction, IOC analysis, ATT&CK mapping, and reporting. 
+### A collection of CyberDefenders blue team investigations, threat hunting exercises, and incident response case studies focused on real-world SOC workflows. Each investigation documents the analytical process used to identify, investigate, and understand security events through evidence collection, timeline reconstruction, IOC analysis, ATT&CK mapping, and reporting. 
 
 <br>
 
@@ -13,11 +13,12 @@
 
 | # | Investigation | Platform | Focus | Status |
 |---|--------------|----------|-------|--------|
-| 01 | [Log Analysis - Sysmon](./01-Log-Analysis-Sysmon/) | BTLO | Endpoint, Windows Event Logs | Complete |
-| 02 | [Paranoid - Linux IR](./02-Paranoid-Linux-IR/) | BTLO | Linux, SSH, Privilege Escalation | Complete |
-| 03 | [Phishing Analysis](./03-Phishing-Analysis/) | BTLO | Email, IOC Extraction | Complete |
-| 04 | [Follina - CVE-2022-30190](./04-Follina-Investigation/) | BTLO | Endpoint, Vulnerability, Malware | Complete |
-| 05 | [The Report - Threat Intelligence](./05-The-Report-Threat-Intel/) | BTLO | Threat Intel, IOC Analysis | Complete |
+| 01 | AWSWatcher	| CyberDefenders	| AWS CloudTrail, IAM abuse, API activity, cloud forensics	| Not Started |
+| 02 | Rogue Azure | CyberDefenders	| Azure AD / Entra ID compromise, identity attacks, sign-in analysis 
+| Not Started |
+| 03 | AbuSESer - Trufflenet | CyberDefenders	Business Email Compromise, AWS + Lambda correlation, IOC extraction |	Not Started |
+| 04 | CursorJack | CyberDefenders | Endpoint → cloud pivot, multi-stage intrusion, workstation compromise | Not Started |
+| 05 | Fork Bomb - TeamPCP | CyberDefenders | Supply chain attack, malicious package, cloud/environment takeover | Not Started |
 
 ---
 
@@ -38,6 +39,4 @@ Investigation   — evidence, artifacts, and answers
 
 ## Platform
 
-Primary: [Blue Team Labs Online (BTLO)](https://blueteamlabs.online/)
-
-Additional investigations may be added from CyberDefenders and TryHackMe
+Primary: [CyberDefenders](https://cyberdefenders.org/)
