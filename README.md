@@ -4,7 +4,7 @@
 
 <br>
 
-### Topics span endpoint, network, identity, cloud, and threat intelligence investigations using industry-standard security tools and methodologies.
+### Topics span cloud, identity, email compromise, endpoint, and supply chain investigations through real-world attack scenarios involving AWS, Azure AD, phishing campaigns, and multi-stage intrusion chains using industry-standard security tools and methodologies.
 
 ---
 <br>
