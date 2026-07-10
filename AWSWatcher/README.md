@@ -1,8 +1,16 @@
 # Overview: 
 
+**Between 20 and 25 February 2025, Compliant Secure Store recently launched its new website, but security misconfigurations left critical gaps. Soon after the launch, an attacker initiated widespread scanning and discovered an upload feature that processed XML data without proper validation. By crafting a specially designed payload, the attacker manipulated the system’s input handling, triggering unintended data exposure.**
+
+**Using the extracted information from this vulnerability, the attacker authenticated into the system and navigated internal resources. During the exploration, misconfigured storage buckets were discovered, and sensitive records were exfiltrated before the security team could intervene.**
+
+(screenshots/Overview.png)
+
 <br>
 
 ### Methodology: 
+
+**Using the AWS console to analyze AWS GuardDuty, CloudTrail, S3, and CloudWatch logs to identify attacker actions, exploited misconfigurations, and reconstruct an AWS cloud security incident. Our mission is to analyze the attack flow, identify exploited weaknesses, and implement the necessary security controls to prevent future incidents.**
 
 ---
 
@@ -34,58 +42,73 @@
 
 ## Investigation:
 
-### 1. 
+### 1. During the initial scanning, the attacker interacted with the web application from an external IP address. What is the origin IP tied to the attacker, as observed in the AWS logs?
+
+So we know init_start/start/end/report/etc. data doesn't have any info about IPs, so we need to look for custom logging within the timeframe of the attack (feb 20th to feb 25th). Looking through all lambda logs, we see the first of what looks like a custom log:
+(screenshots/1.png)
+
+We indeed see an IP address in this custom log, so we know that "Received events:" is what we need to query for in our logs, and we can go from there. Searching the query: 
+
+```sql
+SOURCE "arn:aws:logs:us-east-1:149536493376:log-group:/aws/lambda/FileUpload" START=2025-02-20T01:00:00.000Z END=2025-02-25T23:59:59.000Z |
+fields @timestamp, @requestId
+| filter @message like /Received event/
+| sort @timestamp asc
+```
+
+There are pretty evenly spaced out logs, then there are a burst of ~20 logs within a span of 15 minutes, which is very characteristic of the attacker scan we are looking for. Investigating these logs, we see very suspicious activity uploading files called random_file.jpg, user_database_2693.db, and many files with large volumes of base64 encoded file data. 
+
+**For this question, we find that they all have a sourceIP of 41.46.53.241.**
+
+**Answer: 41.46.53.241**
+
+---
+
+### 2. A code review uncovered a function that lacked proper input validation, enabling arbitrary file processing. Which function’s misconfiguration directly enabled the initial exploit?
 
 **Answer:**
 
 ---
 
-
-### 2.
-
-**Answer:**
-
----
-
-### 3.
+### 3. The attacker uploaded a file masquerading as a benign document but containing an embedded malicious payload. What’s the filename of the SVG payload disguised as a financial record?
 
 
 **Answer:**
 
 ---
 
-### 4.
+### 4. During analysis of the CloudWatch Logs, the attacker’s external IP address was observed invoking an API to upload files to an S3 bucket. What is the exact URL path used for this upload operation, as seen in the logs?
 
 **Answer:**
 
 ---
 
-### 5.
+### 5. Which IAM role with excessive permissions was abused during the attack and used to query sensitive S3 buckets?
 
 **Answer:**
 
 ---
 
-### 6.
+### 6. What is the MITRE ATT&CK technique related to the attacker’s use of valid cloud credentials to log into the system?
 
 **Answer:**
 
 ---
 
-### 7.
+### 7. A server error inadvertently disclosed a temporary AWS access key in the older S3 bucket logs. What is the AccessKeyId value that was leaked?
 
 **Answer:**
 
 ---
 
-### 8. 
+### 8. A critical alert was triggered when the attacker invoked an API to retrieve temporary credentials. What is the Event ID of the GetRole API call?
 
 **Answer:**
 
 
 ---
 
-### 9.
+### 9. Analysis of HTTP User-Agent strings and CLI artifacts suggests the attacker was using a penetration-testing operating system. Which operating system was likely used by the attacker?
 
 **Answer:**
 
