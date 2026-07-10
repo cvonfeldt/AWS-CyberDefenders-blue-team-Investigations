@@ -66,20 +66,40 @@ There are pretty evenly spaced out logs, then there are a burst of ~20 logs with
 
 ### 2. A code review uncovered a function that lacked proper input validation, enabling arbitrary file processing. Which function’s misconfiguration directly enabled the initial exploit?
 
-**Answer:**
+For this we want to look again at the logs within the initial scan. We see that they all have the lambda function attribute of "FileUpload"
+**Answer: FileUpload**
 
 ---
 
 ### 3. The attacker uploaded a file masquerading as a benign document but containing an embedded malicious payload. What’s the filename of the SVG payload disguised as a financial record?
 
+To search specifically for logs with .svg files, we switch the query to:
 
-**Answer:**
+```sql
+fields @timestamp, @requestId, @message
+| filter @message like /\.svg/
+| sort @timestamp asc
+```
+
+The results show only 1 log that occurred after the initial scan:
+
+(screenshots/2.png)
+
+Here we can see that the file uploaded is "financial_statement_2143.svg"
+
+**Answer: financial_statement_2143.svg**
 
 ---
 
 ### 4. During analysis of the CloudWatch Logs, the attacker’s external IP address was observed invoking an API to upload files to an S3 bucket. What is the exact URL path used for this upload operation, as seen in the logs?
 
-**Answer:**
+For this one, quick search tells us that the exact AWS API gateway structure is "https://{api-id}.execute-api.{region}.amazonaws.com/{stage}/{resource-path}", and we see in one of the many file uploads from the attacker:
+
+(screenshots/3.png)
+
+That the domain is "upilqcjrp5.execute-api.us-east-1.amazonaws.com", the stage is "prod", and the resourcePath is "/dev/upload" - for confirmation it says the path is those combined: "/prod/dev/upload." Putting it all together we get: "https://upilqcjrp5.execute-api.us-east-1.amazonaws.com/prod/dev/upload". This is consistent with all of the file uploads from the attacker, so we can deduce it's the upload(s) to the S3 bucket.
+
+**Answer: https://upilqcjrp5.execute-api.us-east-1.amazonaws.com/prod/dev/upload**
 
 ---
 
