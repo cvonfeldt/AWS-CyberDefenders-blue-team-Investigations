@@ -46,11 +46,53 @@
 
 ### 1.1) During the initial threat hunting phase, analysis of CloudTrail logs revealed API calls from multiple source IP addresses. One IP address stood out as highly suspicious due to its association with multiple identities and offensive security tooling. What is this attacker's IP address?
 
-**Answer:**
+For this one, I first went to view the custom logs of the api calls, and saw that "sourceIP" and "accountID" are formatted in JSON, so we can search for number of distinct accountIDs associated with different sourceIPs, since we know this suspicious account was associated with multiple identities:
+
+```sql
+SOURCE logGroups(namePrefix: [], class: "STANDARD") START=2026-01-23T00:00:00.000Z END=2026-01-23T23:59:59.000Z |
+fields @timestamp, @message
+| parse @message '"sourceIPAddress":"*"' as sourceIPAddress
+| parse @message '"accountId":"*"' as accountId
+| filter ispresent(sourceIPAddress) and ispresent(accountId)
+| stats count_distinct(accountId) as distinctAccounts by sourceIPAddress
+| sort distinctAccounts desc
+```
+
+![Q1.1](screenshots/1.png)
+
+We can see there is only one IP associated with multiple IDs: **52.59.194.168**. Let's confirm by querying that IP specifically to analyze their offensive tooling:
+
+```sql
+SOURCE logGroups(namePrefix: [], class: "STANDARD") START=2026-01-23T00:00:00.000Z END=2026-01-23T23:59:59.000Z |
+fields @timestamp, @message
+| parse @message '"sourceIPAddress":"*"' as sourceIPAddress
+| parse @message '"userAgent":"*"' as userAgent
+| filter sourceIPAddress == "52.59.194.168"
+| display userAgent
+```
+We can see below that this IP address is associated with both Pacu and TruffleHog - both very well known offensive tools for AWS exploitation and finding leaked credentials.
+
+![Q1.1](screenshots/2.png)
+
+**Answer: 52.59.194.168**
 
 ### 1.2) The attacker's first action was to probe for publicly accessible resources. What is the full name of the S3 bucket they discovered?
 
-**Answer:**
+Sorting by ascending timestamps, we see the truffleHog was the first agent associated with an API call from the attacker IP. I did a quick google search to find that TruffleNet separately finds scans and finds credential info (separate from any API call we see here), then TruffleNet tests the credential (which we know is successful since there is a successful API call with no error fields):
+
+![Q1.2](screenshots/1.1.png)
+
+We see it test the credentials in a GetUserIdentity API call, then the next log is svc-jenkins running the same API call with the same credentials:
+
+![Q1.2](screenshots/1.2.png)
+
+Since the attacker now has access, we will look at the logs following shortly after to see where he accessed an S3 bucket: 
+
+![Q1.2](screenshots/3.png)
+
+In the very next log, see the API call accessing the S3 bucket with the name of: "maromalix-website-assets-prod-83c9fdc8"
+
+**Answer: maromalix-website-assets-prod-83c9fdc8**
 
 ---
 
@@ -60,11 +102,15 @@
 
 ### 2.1) The attacker used a tool designed to scan repositories and file systems for exposed secrets, then automatically validate any discovered credentials. What is the name of this tool?
 
-**Answer:**
+We already found this above - the attacker uses TruffleHog - (TruffleNet to scan for exposed secrets then TruffleHog to validate the credentials).
+
+**Answer: TruffleHog**
 
 ### 2.2) The credentials discovered by the attacker belonged to a service account. What is the name of this initially compromised user?
 
-**Answer:**
+We also found this one above. After the truffleHog validation, the next API call is from an account called "svc-jenkins," indicating this is the compromised user. 
+
+**Answer: svc-jenkins**
 
 ---
 
@@ -74,7 +120,13 @@
 
 ### 3.1) To systematically enumerate the AWS environment and discover potential privilege escalation paths, the attacker used an open-source cloud exploitation framework. Provide the name and version of this tool as recorded in the logs.
 
-**Answer:**
+Investigating logs of the other known offensive security tool used (Pacu):
+
+![Q3](screenshots/3.1.png)
+
+We see attempts at environment enumeration with Pacu/1.5.2. The above API call attempts listGroups but access is denied. In following logs, the attacker also tries to call listUsers which is also denied, but is able to successfully make listPolicies and listRoles calls.  
+
+**Answer: Pacu/1.5.2**
 
 ---
 
