@@ -10,7 +10,7 @@
 
 ### Methodology: 
 
-**The primary investigation tool will be AWS CloudWatch Logs Insights—use it to query CloudTrail and Lambda execution logs, reconstruct the attack timeline, and identify indicators of compromise.**
+**The primary investigation tool will be AWS CloudWatch Logs Insights - we will use it to query CloudTrail and Lambda execution logs, reconstruct the attack timeline, and identify indicators of compromise.**
 
 ---
 
