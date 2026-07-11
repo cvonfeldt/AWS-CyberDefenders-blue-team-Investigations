@@ -48,8 +48,6 @@
 
 ## Indicators of Compromise:
 
-| IOC Type                  | Value               |
-| -------------------------- | -------------------- |
 | Type | Indicator | Context |
 |---|---|---|
 | API Path | `POST /dev/upload` | Legitimate upload endpoint discovered via scanning and used to deliver the malicious payload |
