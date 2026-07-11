@@ -19,7 +19,7 @@
 ### Attack Chain: 
 
 ```
-                                          Compliant Secure Store launches new website (Feb 2025)
+                                        Compliant Secure Store launches new website (Feb 2025)
                                                                    ↓
                               Attacker scans site → malformed 'body' KeyError requests hit FileUpload Lambda
                                                                    ↓
@@ -39,7 +39,7 @@
                                                                    ↓
                                 LambdaParser's excessive S3 permissions abused to enumerate private buckets
                                                                    ↓
-                            Misconfigured/overprivileged S3 bucket(s) discovered - Sensitive records exfiltrated from S3 
+                       Misconfigured/overprivileged S3 bucket(s) discovered - Sensitive records exfiltrated from S3 
 ```
 
 ---
