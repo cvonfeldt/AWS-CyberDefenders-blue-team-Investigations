@@ -1,6 +1,6 @@
 # Overview: 
 
-**Between 20 and 25 February 2025, Compliant Secure Store recently launched its new website, but security misconfigurations left critical gaps. Soon after the launch, an attacker initiated widespread scanning and discovered an upload feature that processed XML data without proper validation. By crafting a specially designed payload, the attacker manipulated the system’s input handling, triggering unintended data exposure.**
+### Between 20 and 25 February 2025, Compliant Secure Store recently launched its new website, but security misconfigurations left critical gaps. Soon after the launch, an attacker initiated widespread scanning and discovered an upload feature that processed XML data without proper validation. By crafting a specially designed payload, the attacker manipulated the system’s input handling, triggering unintended data exposure.
 
 **Using the extracted information from this vulnerability, the attacker authenticated into the system and navigated internal resources. During the exploration, misconfigured storage buckets were discovered, and sensitive records were exfiltrated before the security team could intervene.**
 
