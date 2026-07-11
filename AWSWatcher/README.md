@@ -68,8 +68,13 @@
 
 ## MITRE ATT&CK Mapping:
 
-| ATT&CK ID | Technique                                                | Evidence                                        |
-| --------- | -------------------------------------------------------- | ----------------------------------------------- |
+| ATT&CK ID     | Technique                               | Evidence                                                                                                                          |
+| ------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **T1595.002** | Active Scanning: Vulnerability Scanning | Automated reconnaissance identified the vulnerable public file upload endpoint through repeated malformed requests.               |
+| **T1190**     | Exploit Public-Facing Application       | Crafted XXE payload uploaded through the public `/dev/upload` endpoint exploited insecure XML parsing in the `FileUpload` Lambda. |
+| **T1078.004** | Valid Accounts: Cloud Accounts          | Temporary AWS IAM credentials extracted from Lambda environment variables were used to authenticate to AWS.                       |
+| **T1526**     | Cloud Service Discovery                 | The attacker enumerated accessible AWS resources, including S3 buckets, using the compromised IAM role.                           |
+| **T1530**     | Data from Cloud Storage                 | Sensitive records were accessed and exfiltrated from S3 using the compromised credentials.                                        |
 
 ---
 
