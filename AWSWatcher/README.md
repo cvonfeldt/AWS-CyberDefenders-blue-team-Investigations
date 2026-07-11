@@ -4,7 +4,7 @@
 
 **Using the extracted information from this vulnerability, the attacker authenticated into the system and navigated internal resources. During the exploration, misconfigured storage buckets were discovered, and sensitive records were exfiltrated before the security team could intervene.**
 
-(screenshots/Overview.png)
+![Overview](screenshots/Overview.png)
 
 <br>
 
@@ -45,7 +45,8 @@
 ### 1. During the initial scanning, the attacker interacted with the web application from an external IP address. What is the origin IP tied to the attacker, as observed in the AWS logs?
 
 So we know init_start/start/end/report/etc. data doesn't have any info about IPs, so we need to look for custom logging within the timeframe of the attack (feb 20th to feb 25th). Looking through all lambda logs, we see the first of what looks like a custom log:
-(screenshots/1.png)
+
+![Q1](screenshots/1.png)
 
 We indeed see an IP address in this custom log, so we know that "Received events:" is what we need to query for in our logs, and we can go from there. Searching the query: 
 
@@ -84,7 +85,7 @@ fields @timestamp, @requestId, @message
 
 The results show only 1 log that occurred after the initial scan:
 
-(screenshots/2.png)
+![Q3](screenshots/2.png)
 
 Here we can see that the file uploaded is "financial_statement_2143.svg"
 
@@ -96,7 +97,7 @@ Here we can see that the file uploaded is "financial_statement_2143.svg"
 
 For this one, quick search tells us that the exact AWS API gateway structure is "https://{api-id}.execute-api.{region}.amazonaws.com/{stage}/{resource-path}", and we see in one of the many file uploads from the attacker:
 
-(screenshots/3.png)
+![Q4](screenshots/3.png)
 
 That the domain is "upilqcjrp5.execute-api.us-east-1.amazonaws.com", the stage is "prod", and the resourcePath is "/dev/upload" - for confirmation it says the path is those combined: "/prod/dev/upload." Putting it all together we get: "https://upilqcjrp5.execute-api.us-east-1.amazonaws.com/prod/dev/upload". This is consistent with all of the file uploads from the attacker, so we can deduce it's the upload(s) to the S3 bucket.
 
@@ -108,7 +109,7 @@ That the domain is "upilqcjrp5.execute-api.us-east-1.amazonaws.com", the stage i
 
 For this we can go to the lambda configurations to check IAM roles:
 
-(screenshots/4.png)
+![Q5](screenshots/4.png)
 
 We can see the only role associated with the fileupload function is "LambdaParser." This instance provided by cyberdefenders doesn't allow to investigate deeper the IAM role, but it is common to have file parser custom functions in lambda to process/extract S3 files.
 
@@ -152,11 +153,11 @@ This is unfortunately another one where the instance doesn't have access. The fi
 
 For this one we analyze the custom logs again and see that the most recent one had "User-Agent": "Mozilla/5.0 (X11; Kali Linux x86_64), which is obviously a very well-known pen testing Linux distribution:
 
-(screenshots/5.png)
+![Q9](screenshots/5.png)
 
 Also when decoding this in base64 (as well as some of the earlier "test.svg" files), we see that how the payload is structured:
 
-(screenshots/base64.png)
+![Q9](screenshots/base64.png)
 
 The base64 xml code in the uploaded file embeds a DOCTYPE declaration defining a custom entity (&xxe;) that points at a file on the server's local filesystem: /proc/self/environ. The fileupload lambda function sees the ENTITY declaration, goes and reads the referenced file (/proc/self/environ) from the server's local disk, and substitutes that file's contents wherever &xxe; appears in the document in this case, - inside the SVG's <text> element.
 
@@ -172,5 +173,5 @@ We know that /proc/self/environ contains the Lambda execution environment's envi
 
 **Complete:**
 
-(screenshots/complete.png)
+![complete](screenshots/complete.png)
 
