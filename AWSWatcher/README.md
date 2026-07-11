@@ -67,6 +67,7 @@ There are pretty evenly spaced out logs, then there are a burst of ~20 logs with
 ### 2. A code review uncovered a function that lacked proper input validation, enabling arbitrary file processing. Which function’s misconfiguration directly enabled the initial exploit?
 
 For this we want to look again at the logs within the initial scan. We see that they all have the lambda function attribute of "FileUpload"
+
 **Answer: FileUpload**
 
 ---
@@ -105,35 +106,69 @@ That the domain is "upilqcjrp5.execute-api.us-east-1.amazonaws.com", the stage i
 
 ### 5. Which IAM role with excessive permissions was abused during the attack and used to query sensitive S3 buckets?
 
-**Answer:**
+For this we can go to the lambda configurations to check IAM roles:
+
+(screenshots/4.png)
+
+We can see the only role associated with the fileupload function is "LambdaParser." This instance provided by cyberdefenders doesn't allow to investigate deeper the IAM role, but it is common to have file parser custom functions in lambda to process/extract S3 files.
+
+**Answer: LambdaParser**
 
 ---
 
 ### 6. What is the MITRE ATT&CK technique related to the attacker’s use of valid cloud credentials to log into the system?
 
-**Answer:**
+The specific MITRE ATT&CK technique for using valid cloud credentials to log into a system is Valid Accounts (Technique T1078), specifically the sub-technique Cloud Accounts (T1078.004)
+
+**Answer: T1078.004**
 
 ---
 
 ### 7. A server error inadvertently disclosed a temporary AWS access key in the older S3 bucket logs. What is the AccessKeyId value that was leaked?
 
-**Answer:**
+For this one I looked all over, trying to analyze ERROR logs, looking at cloudtrail events (ones I have access to - only last 90 days), searching specifically for
+
+fields @timestamp, @message
+| filter @message like /accessKeyId/ or @message like /AccessKeyId/ or @message like /ASIA/
+| sort @timestamp asc
+
+And nothing. I had to look up the answer (ASIASFUIRZ5AETONKITQ), and even after finding the answer online and specifically searching for it in the logs, I couldn't find it - and it wouldn't be any part of the Base64 encoding we saw because it was leaked by AWS. I'm thinking that when this lab was created, they gave the instance more privileges but have since taken them away. The answer I found online found the Access Key by going to GuardDuty, which I don't have access to. Even in the overview of the lab it states: **Note: To solve this lab, you will need to use CloudWatch Log Insights to analyze the logs and identify the attack patterns. All the information required to answer the questions can be found by effectively querying the CloudWatch logs.** So I think this question is just outdated with what the instance actually gives access to now.
+
+**Answer: ASIASFUIRZ5AETONKITQ**
 
 ---
 
 ### 8. A critical alert was triggered when the attacker invoked an API to retrieve temporary credentials. What is the Event ID of the GetRole API call?
+This is unfortunately another one where the instance doesn't have access. The first hint is "Examine CloudTrail logs for IAM-related API calls that would help an attacker understand role permissions", and I can only view cloudtrail logs from the last 90 days. Had to lookup the answer which is 78efd559-c626-4002-b458-088a4cc80e53. Hopefully they soon either update the instance to give access to GuardDuty, CloudTrail, etc, or they update the questions/investigation to account for that lack of access. I will definitely leave a review about it upon completion of the lab.
 
-**Answer:**
+**Answer: 78efd559-c626-4002-b458-088a4cc80e53**
 
 
 ---
 
 ### 9. Analysis of HTTP User-Agent strings and CLI artifacts suggests the attacker was using a penetration-testing operating system. Which operating system was likely used by the attacker?
 
-**Answer:**
+For this one we analyze the custom logs again and see that the most recent one had "User-Agent": "Mozilla/5.0 (X11; Kali Linux x86_64), which is obviously a very well-known pen testing Linux distribution:
+
+(screenshots/5.png)
+
+Also when decoding this in base64 (as well as some of the earlier "test.svg" files), we see that how the payload is structured:
+
+(screenshots/base64.png)
+
+The base64 xml code in the uploaded file embeds a DOCTYPE declaration defining a custom entity (&xxe;) that points at a file on the server's local filesystem: /proc/self/environ. The fileupload lambda function sees the ENTITY declaration, goes and reads the referenced file (/proc/self/environ) from the server's local disk, and substitutes that file's contents wherever &xxe; appears in the document in this case, - inside the SVG's <text> element.
+
+We know that /proc/self/environ contains the Lambda execution environment's environment variables — critically, temporary AWS credentials (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN). Because the SVG now contains this data embedded as visible text, and if the function returns/stores/displays this processed SVG back in any way the attacker can retrieve, those credentials just leaked straight into the attacker's hands, which is obviously what occurred in this attack.
+
+**With those leaked temporary credentials, the attacker was able to make their own authenticated AWS API calls, using the LambdaParser role's actual permissions - which is where "authenticated into the system and navigated internal resources" came from - the attack effectively tricked a poorly-configured XML parser into reading a sensitive local file and echoing its contents back**
+
+**Answer: Kali**
 
 ---
 
-### 10.
+<br>
 
-**Answer:**
+**Complete:**
+
+(screenshots/complete.png)
+
