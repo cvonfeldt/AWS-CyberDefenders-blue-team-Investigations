@@ -132,7 +132,9 @@ fields @timestamp, @message
 | filter @message like /accessKeyId/ or @message like /AccessKeyId/ or @message like /ASIA/
 | sort @timestamp asc
 
-And nothing. I had to look up the answer (*key redacted due to github secret sharing policy*), and even after finding the answer online and specifically searching for it in the logs, I couldn't find it - and it wouldn't be any part of the Base64 encoding we saw because it was leaked by AWS. I'm thinking that when this lab was created, they gave the instance more privileges but have since taken them away. The answer I found online found the Access Key by going to GuardDuty, which I don't have access to. Even in the overview of the lab it states: **Note: To solve this lab, you will need to use CloudWatch Log Insights to analyze the logs and identify the attack patterns. All the information required to answer the questions can be found by effectively querying the CloudWatch logs.** So I think this question is just outdated with what the instance actually gives access to now.
+And nothing. I had to look up the answer (*key redacted due to github secret sharing policy*), and even after finding the answer online and specifically searching for it in the logs, I couldn't find it - and it wouldn't be any part of the Base64 encoding we saw because it was leaked by AWS. I'm thinking that when this lab was created, they gave the instance more privileges but have since taken them away. The answer I found online found the Access Key by going to GuardDuty, which I don't have access to. 
+
+Even in the overview of the lab it states: **Note: To solve this lab, you will need to use CloudWatch Log Insights to analyze the logs and identify the attack patterns. All the information required to answer the questions can be found by effectively querying the CloudWatch logs.** So I think this question is just outdated with what the instance actually gives access to now.
 
 **Answer: *redacted***
 
