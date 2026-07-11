@@ -54,6 +54,7 @@
 
 ---
 
+<br>
 
 ## 2. Initial Access
 
@@ -67,6 +68,8 @@
 
 ---
 
+<br>
+
 ## 3. Discovery #1
 
 ### 3.1) To systematically enumerate the AWS environment and discover potential privilege escalation paths, the attacker used an open-source cloud exploitation framework. Provide the name and version of this tool as recorded in the logs.
@@ -74,6 +77,8 @@
 **Answer:**
 
 ---
+
+<br>
 
 ## 4. Privilege Escalation
 
@@ -87,6 +92,8 @@
 
 ---
 
+<br>
+
 ## 5. Discovery #2
 
 ### 5.1) With elevated privileges, the attacker enumerated several AWS services looking for sensitive data. Which AWS service did they successfully query to discover stored credentials and secrets?
@@ -94,6 +101,8 @@
 **Answer:**
 
 ---
+
+<br>
 
 ## 6. Credential Access #1
 
@@ -107,6 +116,8 @@
 
 ---
 
+<br>
+
 ## 7. Lateral Movement
 
 ### 7.1) Using credentials obtained from the exfiltrated secrets, the attacker pivoted to a different IAM role. What is the full name of this role?
@@ -115,6 +126,8 @@
 
 ---
 
+<br>
+
 ## 8. Credential Access #2
 
 ### 8.1) The attacker used their new role to remotely execute commands on an EC2 instance and steal its IAM credentials via the Instance Metadata Service (IMDS). Provide the API call used to execute commands and the instance ID of the compromised machine, separated by a comma.
@@ -122,6 +135,8 @@
 **Answer:**
 
 ---
+
+<br>
 
 ## 9. Discovery #3
 
@@ -134,6 +149,8 @@
 **Answer:**
 
 ---
+
+<br>
 
 ## 10. Impact
 
