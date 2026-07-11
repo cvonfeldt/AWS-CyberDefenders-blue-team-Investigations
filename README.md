@@ -13,8 +13,8 @@
 
 | # | Investigation | Platform | Focus | Status |
 |---|--------------|----------|-------|--------|
-| 01 | AWSWatcher	| CyberDefenders	| AWS CloudTrail, IAM abuse, API activity, cloud forensics	| In Progress |
-| 02 | Rogue Azure | CyberDefenders	| Azure AD / Entra ID compromise, identity attacks, sign-in analysis | Not Started |
+| 01 | AWSWatcher	| CyberDefenders	| AWS CloudTrail, IAM abuse, API activity, cloud forensics	| Complete |
+| 02 | Rogue Azure | CyberDefenders	| Azure AD / Entra ID compromise, identity attacks, sign-in analysis | In Progress |
 | 03 | AbuSESer - Trufflenet | CyberDefenders | Business Email Compromise, AWS + Lambda correlation, IOC extraction |	Not Started |
 | 04 | CursorJack | CyberDefenders | Endpoint → cloud pivot, multi-stage intrusion, workstation compromise | Not Started |
 | 05 | Fork Bomb - TeamPCP | CyberDefenders | Supply chain attack, malicious package, cloud/environment takeover | Not Started |
