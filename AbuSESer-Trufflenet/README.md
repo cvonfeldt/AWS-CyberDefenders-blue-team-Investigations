@@ -55,7 +55,7 @@
 ---
 
 
-### 2. Initial Access
+## 2. Initial Access
 
 ### 2.1) The attacker used a tool designed to scan repositories and file systems for exposed secrets, then automatically validate any discovered credentials. What is the name of this tool?
 
@@ -67,7 +67,7 @@
 
 ---
 
-### 3. Discovery #1
+## 3. Discovery #1
 
 ### 3.1) To systematically enumerate the AWS environment and discover potential privilege escalation paths, the attacker used an open-source cloud exploitation framework. Provide the name and version of this tool as recorded in the logs.
 
@@ -75,7 +75,7 @@
 
 ---
 
-### 4. Privilege Escalation
+## 4. Privilege Escalation
 
 ### 4.1) The attacker discovered an overly permissive trust policy and escalated their privileges. What is the name of the first role the attacker successfully assumed?
 
@@ -87,7 +87,7 @@
 
 ---
 
-### 5. Discovery #2
+## 5. Discovery #2
 
 ### 5.1) With elevated privileges, the attacker enumerated several AWS services looking for sensitive data. Which AWS service did they successfully query to discover stored credentials and secrets?
 
@@ -95,7 +95,7 @@
 
 ---
 
-### 6. Credential Access #1
+## 6. Credential Access #1
 
 ### 6.1) After discovering the secrets inventory, the attacker began exfiltrating credentials. What is the ID of the first secret the attacker retrieved?
 
@@ -107,7 +107,7 @@
 
 ---
 
-### 7. Lateral Movement
+## 7. Lateral Movement
 
 ### 7.1) Using credentials obtained from the exfiltrated secrets, the attacker pivoted to a different IAM role. What is the full name of this role?
 
@@ -115,7 +115,7 @@
 
 ---
 
-### 8. Credential Access #2
+## 8. Credential Access #2
 
 ### 8.1) The attacker used their new role to remotely execute commands on an EC2 instance and steal its IAM credentials via the Instance Metadata Service (IMDS). Provide the API call used to execute commands and the instance ID of the compromised machine, separated by a comma.
 
@@ -123,7 +123,7 @@
 
 ---
 
-### 9. Discovery #3
+## 9. Discovery #3
 
 ### 9.1) With EC2 instance credentials, the attacker enumerated Lambda functions by downloading their configurations and code. What is the name of the first Lambda function the attacker retrieved?
 
@@ -135,7 +135,7 @@
 
 ---
 
-### 10. Impact
+## 10. Impact
 
 ### 10.1) The attacker sent fraudulent emails to two recipients. Provide both email addresses separated by a comma, with the internal recipient first.
 
