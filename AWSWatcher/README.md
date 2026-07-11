@@ -18,6 +18,30 @@
 
 ### Attack Chain: 
 
+```
+                                              Compliant Secure Store launches new website (Feb 2025)
+                                                                       ↓
+                                  Attacker scans site → malformed 'body' KeyError requests hit FileUpload Lambda
+                                                                       ↓
+                                      Upload endpoint discovered: POST /dev/upload (API Gateway → FileUpload)
+                                                                       ↓
+                                     ~20 upload attempts in 15 min from attacker IP (probing/testing payloads)
+                                                                       ↓
+                        Malicious SVG uploaded: XML DOCTYPE defines external entity <!ENTITY xxe SYSTEM "file:///proc/self/environ">
+                                                                       ↓
+                                      FileUpload's XML parser resolves entity (no external-entity validation)
+                                                                       ↓
+       Lambda's local /proc/self/environ read - environment variables exposed (includes LambdaParser execution role's temporary AWS credentials)
+                                                                       ↓
+                                       Attacker obtains leaked AWS_ACCESS_KEY_ID / SECRET / SESSION_TOKEN
+                                                                       ↓
+                                    Attacker authenticates directly to AWS as LambdaParser (bypassing the app)
+                                                                       ↓
+                                    LambdaParser's excessive S3 permissions abused to enumerate private buckets
+                                                                       ↓
+                                Misconfigured/overprivileged S3 bucket(s) discovered - Sensitive records exfiltrated from S3 
+```
+
 ---
 
 <br> 
