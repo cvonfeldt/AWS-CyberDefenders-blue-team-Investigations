@@ -50,6 +50,19 @@
 
 | IOC Type                  | Value               |
 | -------------------------- | -------------------- |
+| Type | Indicator | Context |
+|---|---|---|
+| API Path | `POST /dev/upload` | Legitimate upload endpoint discovered via scanning and used to deliver the malicious payload |
+| Payload Technique | XXE via SVG (XML) | Malicious file disguised as an SVG image; contains `<!DOCTYPE>`/`<!ENTITY>` declaration |
+| Malicious Entity Target | `file:///proc/self/environ` | External entity target used to read Lambda's local environment variables (credential leak vector) |
+| IAM Role | `LambdaParser` | Execution role attached to `FileUpload`; role assumed to have excessive/abused permissions |
+| Lambda Function | `FileUpload` | Vulnerable function; unvalidated XML parsing enabled the exploit |
+| API Gateway ID(s) | `yafs8bsicg`, `upilqcjrp5` | Two API Gateway instances found with invoke permissions on `FileUpload` |
+| Function URL | `https://zzxs5jrhtyta3wplxvys7uk3zy0xkqja.lambda-url.us-east-1.on.aws/` | Public, unauthenticated Function URL - separate exposure path from API Gateway |
+| Error Pattern | `'body'` KeyError cluster | Rapid, malformed requests indicating automated scanning against `/dev/upload` |
+| Custom Log Pattern | Probing/Testing Payloads | Rapid burst of various file uploads to `/dev/upload` |
+| Attacker IP | Various Suspicious Logs Associated | `41.46.53.241` |
+| Malicious Filename | XML Injected Payload | `financial_statement_2143.svg` |
 
 ---
 
@@ -68,7 +81,7 @@
 
 ### 1. During the initial scanning, the attacker interacted with the web application from an external IP address. What is the origin IP tied to the attacker, as observed in the AWS logs?
 
-So we know init_start/start/end/report/etc. data doesn't have any info about IPs, so we need to look for custom logging within the timeframe of the attack (feb 20th to feb 25th). Looking through all lambda logs, we see the first of what looks like a custom log:
+So we know init_start/start/end/report/etc. data doesn't have any info about IPs, so we need to look for custom logging within the timeframe of the attack (feb 20th to feb 25th). Looking through all lambda logs, we first see a burst of rapid, malformed requests indicating automated scanning against `/dev/upload.` Then we see the first of what looks like a custom log:
 
 ![Q1](screenshots/1.png)
 
@@ -111,7 +124,11 @@ The results show only 1 log that occurred after the initial scan:
 
 ![Q3](screenshots/2.png)
 
-Here we can see that the file uploaded is "financial_statement_2143.svg"
+Here we can see that the file uploaded is "financial_statement_2143.svg". Decoding the base64 file data:
+
+![Q3](screenshots/base642.png)
+
+We see that the xml code in the uploaded file embeds a DOCTYPE declaration defining a custom entity (&xxe;) that points at a file on the server's local filesystem: /proc/self/environ. This will be important to keep in mind going forward. 
 
 **Answer: financial_statement_2143.svg**
 
@@ -183,9 +200,11 @@ Also when decoding this in base64 (as well as some of the earlier "test.svg" fil
 
 ![Q9](screenshots/base64.png)
 
-The base64 xml code in the uploaded file embeds a DOCTYPE declaration defining a custom entity (&xxe;) that points at a file on the server's local filesystem: /proc/self/environ. The fileupload lambda function sees the ENTITY declaration, goes and reads the referenced file (/proc/self/environ) from the server's local disk, and substitutes that file's contents wherever &xxe; appears in the document in this case, - inside the SVG's <text> element.
+Like we saw in the malicious payload in question #3, the base64 xml code in the uploaded file embeds a DOCTYPE declaration defining a custom entity (&xxe;) that points at a file on the server's local filesystem: /proc/self/environ. 
 
-We know that /proc/self/environ contains the Lambda execution environment's environment variables — critically, temporary AWS credentials (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN). Because the SVG now contains this data embedded as visible text, and if the function returns/stores/displays this processed SVG back in any way the attacker can retrieve, those credentials just leaked straight into the attacker's hands, which is obviously what occurred in this attack.
+Putting it all together now, the fileupload lambda function sees the ENTITY declaration, goes and reads the referenced file (/proc/self/environ) from the server's local disk, and substitutes that file's contents wherever &xxe; appears in the document in this case, - inside the SVG's <text> element.
+
+We know that /proc/self/environ contains the Lambda execution environment's environment variables - critically, temporary AWS credentials (AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY, AWS_SESSION_TOKEN). Because the SVG now contains this data embedded as visible text, and if the function returns/stores/displays this processed SVG back in any way the attacker can retrieve, those credentials just leaked straight into the attacker's hands, which is obviously what occurred in this attack.
 
 **With those leaked temporary credentials, the attacker was able to make their own authenticated AWS API calls, using the LambdaParser role's actual permissions - which is where "authenticated into the system and navigated internal resources" came from - the attack effectively tricked a poorly-configured XML parser into reading a sensitive local file and echoing its contents back**
 
