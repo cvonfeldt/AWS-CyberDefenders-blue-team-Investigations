@@ -136,11 +136,37 @@ We see attempts at environment enumeration with Pacu/1.5.2. The above API call a
 
 ### 4.1) The attacker discovered an overly permissive trust policy and escalated their privileges. What is the name of the first role the attacker successfully assumed?
 
-**Answer:**
+For this we can simply list the roles that the attacker IP uses in chronological order using "type: AssumedRole" and list the userName of each:
+
+```sql
+SOURCE logGroups(namePrefix: [], class: "STANDARD") START=2026-01-23T00:00:00.000Z END=2026-01-23T23:59:59.000Z |
+fields @timestamp, @message
+| parse @message '"sourceIPAddress":"*"' as sourceIPAddress
+| parse @message '"type":"*"' as typeRole
+| parse @message '"userName":"*"' as userName
+| filter typeRole == "AssumedRole" and sourceIPAddress == "52.59.194.168"
+| display eventName, userName
+| sort @timestamp asc
+```
+
+This returns the results: 
+
+![Q4.1](screenshots/4.1.png)
+
+We can see that the first assumed role is "Maromalix-DevOps-Role," and its privilege escalation almost surely came from the successful GetSecretValue call. 
+
+
+**Answer: Maromalix-DevOps-Role**
 
 ### 4.2) When assuming the new role, the attacker specified a custom session name to identify their session. What was this session name?
 
-**Answer:**
+For assumed roles, the sesison name comes at the end of the arn:
+
+![Q4.2](screenshots/4.2.png)
+
+We can see here the custom session name used is "DevOpsing_maromalix".
+
+**Answer: DevOpsing_maromalix**
 
 ---
 
@@ -150,7 +176,13 @@ We see attempts at environment enumeration with Pacu/1.5.2. The above API call a
 
 ### 5.1) With elevated privileges, the attacker enumerated several AWS services looking for sensitive data. Which AWS service did they successfully query to discover stored credentials and secrets?
 
-**Answer:**
+When opening up one of the GetSecretValue calls:
+
+![Q5.1](screenshots/5.png)
+
+We see the service and source of the successful event is "secretsmanager", which is a service that allows you to rotate, manage, and retrieve database credentials, API keys, and other secrets.
+
+**Answer: Secrets Manager**
 
 ---
 
@@ -160,11 +192,25 @@ We see attempts at environment enumeration with Pacu/1.5.2. The above API call a
 
 ### 6.1) After discovering the secrets inventory, the attacker began exfiltrating credentials. What is the ID of the first secret the attacker retrieved?
 
-**Answer:**
+Viewing the first successful GetSecretValue call:
+
+![Q6.1](screenshots/6.1.png)
+
+We see that the ID of the first secret the attacker retrieved is "maromalix/database/prod-credentials"
+
+For some reason though, CyberDefenders didn't accept that answer, and instead accepted "maromalix/automation/ssm-credentials", which was the secret ID of the second successful GetSecretValue call. I added the @timestamp to be included in the query, and it turns out that the first three GetSecretValue calls occurred at the exact same time: 
+
+![Q6.1](screenshots/6.1.1.png)
+
+Which explains the confusion. The correct answer could be any of these 3, but CyberDefenders accepts maromalix/automation/ssm-credentials.
+
+**Answer: maromalix/automation/ssm-credentials**
 
 ### 6.2) What is the MITRE ATT&CK technique ID that corresponds to this credential exfiltration behavior?
 
-**Answer:**
+Cloud Secrets Management Stores (T1555.006): Adversaries query cloud-native secret vaults like AWS Secrets Manager or Azure Key Vault for bulk credential retrieval.
+
+**Answer: T1555.006**
 
 ---
 
@@ -174,7 +220,9 @@ We see attempts at environment enumeration with Pacu/1.5.2. The above API call a
 
 ### 7.1) Using credentials obtained from the exfiltrated secrets, the attacker pivoted to a different IAM role. What is the full name of this role?
 
-**Answer:**
+We can see in the photo in my answer to 4.1, the attacker pivoted to a role named "Maromalix-SSM-Automation-Role".
+
+**Answer: Maromalix-SSM-Automation-Role**
 
 ---
 
