@@ -4,7 +4,7 @@
 
 <br>
 
-## These labs examine initial access vectors, infrastructure metadata abuse, and malicious automation. Investigations leverage CloudTrail, API activity, and Lambda telemetry to trace real-world attack vectors across your portfolio, including IMDSv1 SSRF exploits, S3 credential theft, and malicious Lambda correlations.
+## Topics span initial access vectors, infrastructure metadata abuse, and malicious automation. Investigations leverage CloudTrail, API activity, and Lambda telemetry to trace real-world attack vectors across your portfolio, including IMDSv1 SSRF exploits, S3 credential theft, and malicious Lambda correlations.
 
 ---
 <br>
