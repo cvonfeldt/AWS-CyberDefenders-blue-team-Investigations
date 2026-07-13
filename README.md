@@ -1,4 +1,4 @@
-# CyberDefenders Blue Team Investigations Writeups
+# CyberDefenders AWS Investigations Writeups
 
 ### A structured series of various CyberDefenders Premium (BlueYard) AWS forensics and threat hunting challenges focused on isolating infrastructure breaches, initial access vectors, and malicious automation. Designed around real-world SOC workflows, each project documents the complete analytical process required to identify, investigate, and scope security events through timeline reconstruction, IOC extraction, and MITRE ATT&CK mapping.
 
