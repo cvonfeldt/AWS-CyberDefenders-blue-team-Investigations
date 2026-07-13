@@ -38,4 +38,4 @@ Investigation   — evidence, artifacts, and answers
 
 ## Platform
 
-Primary: [CyberDefenders](https://cyberdefenders.org/)
+[CyberDefenders](https://cyberdefenders.org/)
