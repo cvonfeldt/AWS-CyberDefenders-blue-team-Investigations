@@ -78,7 +78,7 @@ We can see below that this IP address is associated with both Pacu and TruffleHo
 
 ### 1.2) The attacker's first action was to probe for publicly accessible resources. What is the full name of the S3 bucket they discovered?
 
-Sorting by ascending timestamps, we see the truffleHog was the first agent associated with an API call from the attacker IP. I did a quick google search to find that TruffleNet separately finds scans and finds credential info (separate from any API call we see here), then TruffleNet tests the credential (which we know is successful since there is a successful API call with no error fields):
+Sorting by ascending timestamps, we see the truffleHog was the first agent associated with an API call from the attacker IP.
 
 ![Q1.2](screenshots/1.1.png)
 
@@ -102,7 +102,7 @@ In the very next log, see the API call accessing the S3 bucket with the name of:
 
 ### 2.1) The attacker used a tool designed to scan repositories and file systems for exposed secrets, then automatically validate any discovered credentials. What is the name of this tool?
 
-We already found this above - the attacker uses **TruffleHog** - (TruffleNet to scan for exposed secrets then TruffleHog to validate the credentials).
+We already found this above - the attacker uses **TruffleHog.**
 
 **Answer: TruffleHog**
 
@@ -284,18 +284,54 @@ Were both "requestParameters.functionName: arn:aws:lambda:us-east-1:592694688519
 
 ### 10.1) The attacker sent fraudulent emails to two recipients. Provide both email addresses separated by a comma, with the internal recipient first.
 
-**Answer:**
+To find the email addresses sent to, I tried a few queries that returned no meaningful results (| filter requestParameters.functionName = "maromalix-email-notifications", | filter eventSource = "email.amazonaws.com", | filter eventName like /Send/, | filter @message like /SendEmail|SendRawEmail|Destination/).
+
+So I tried just querying for @ symbols since obviously the email addresses have to have them, starting after the last getFunction call: 
+
+SOURCE logGroups(namePrefix: [], class: "STANDARD") START=2026-01-23T13:32:52.000Z END=2026-01-23T23:59:59.000Z |
+fields @timestamp, @message
+| filter @message like /@/
+| sort @timestamp asc
+
+This returned lots of useful results: 
+
+![Q10.1](screenshots/10.1.png)
+
+We can see in the @message field for all of the email logs that the sender is the same: "notifications@maromalix.cloud" and there are a variety of destination addresses - we need to find a way to pin down the 2 recipients of fraudulent emails.
+
+Parsing the results to only show recpients: 
+
+![Q10.1](screenshots/10.0.png)
+
+Given the nature of the attack stated in the overview - TechCorp's accounts payable team reported they had processed a wire transfer to what they believed was Maromalix's bank account after receiving an invoice for services rendered. However, Maromalix had not issued any such invoice to TechCorp - A good first recipient to check out of the returned results we can see would be **"billing@maromalix.cloud"**:
+
+![Q10.1](screenshots/10.13.png)
+
+We can clearly see this is the invoice that the accounts payable was deceived into processing the wire transfer with. Now to find the external recipient - scrolling down a few logs we see a recipient of **"billing@techcorp.live"** with the exact same email contents as above. 
+
+**Answer: billing@maromalix.cloud, billing@techcorp.live**
 
 ### 10.2) The fraudulent invoice included attacker-controlled contact email addresses. What are the two domains used for these contact addresses? (Provide both domains separated by a comma, in alphabetical order)
 
-**Answer:**
+We can see from the photo above that the 2 domains of the attacker-controlled email addresses are **cfp-impactaction.com and zoominfopay.com.**
+
+**Answer: cfp-impactaction.com, zoominfopay.com**
 
 ### 10.3) The attacker's ultimate goal was to deceive the victim into transferring funds via a fraudulent invoice. What is the MITRE ATT&CK technique ID that corresponds to this impact?
 
-**Answer:**
+**T1657** (Financial Theft) Financial Theft - the MITRE ATT&CK technique where adversaries steal monetary resources from targets through extortion, social engineering, or technical exploits for their own financial gain.
+
+**Answer: T1657**
 
 ### 10.4) Based on the tools, TTPs, and infrastructure patterns observed in this investigation, this incident matches a known threat campaign. What is the name of this campaign?
+As this whole attack came as a result of TruffleHog scanning and successfully obtaining leaked AWS credentials, a quick google search tells us the campaign is **TruffleNet** - the adversarial campaign where hackers use stolen AWS credentials to build a large-scale framework.
 
-**Answer:**
+**Answer: TruffleNet**
 
 ---
+
+<br>
+
+## 10. Completed:
+
+![done](screenshots/complete.png)
