@@ -76,6 +76,8 @@ We can see below that this IP address is associated with both Pacu and TruffleHo
 
 **Answer: 52.59.194.168**
 
+<br>
+
 ### 1.2) The attacker's first action was to probe for publicly accessible resources. What is the full name of the S3 bucket they discovered?
 
 Sorting by ascending timestamps, we see the truffleHog was the first agent associated with an API call from the attacker IP.
@@ -105,6 +107,8 @@ In the very next log, see the API call accessing the S3 bucket with the name of:
 We already found this above - the attacker uses **TruffleHog.**
 
 **Answer: TruffleHog**
+
+<br>
 
 ### 2.2) The credentials discovered by the attacker belonged to a service account. What is the name of this initially compromised user?
 
@@ -158,6 +162,8 @@ We can see that the first assumed role is **"Maromalix-DevOps-Role,"** and its p
 
 **Answer: Maromalix-DevOps-Role**
 
+<br>
+
 ### 4.2) When assuming the new role, the attacker specified a custom session name to identify their session. What was this session name?
 
 For assumed roles, the session name comes at the end of the arn:
@@ -205,6 +211,8 @@ For some reason though, CyberDefenders didn't accept that answer, and instead ac
 Which explains the confusion. The correct answer could be any of these 3, but CyberDefenders accepts **maromalix/automation/ssm-credentials.**
 
 **Answer: maromalix/automation/ssm-credentials**
+
+<br>
 
 ### 6.2) What is the MITRE ATT&CK technique ID that corresponds to this credential exfiltration behavior?
 
@@ -266,6 +274,8 @@ Here we can see the first Lambda function that the attacker retrieved is **"func
 
 **Answer: maromalix-daily-backup**
 
+<br>
+
 ### 9.2) After examining multiple functions, the attacker identified one suitable for their attack. What is the name of the Lambda function he used to send fraudulent emails?
 
 After analyzing the other 3 GetFunction20150331v2 calls, one was a second daily-backup call, and the other 2 were **"maromalix-email-notifications,"** and given these two "Invoke" calls: 
@@ -311,17 +321,23 @@ We can clearly see this is the invoice that the accounts payable was deceived in
 
 **Answer: billing@maromalix.cloud, billing@techcorp.live**
 
+<br>
+
 ### 10.2) The fraudulent invoice included attacker-controlled contact email addresses. What are the two domains used for these contact addresses? (Provide both domains separated by a comma, in alphabetical order)
 
 We can see from the photo above that the 2 domains of the attacker-controlled email addresses are **cfp-impactaction.com and zoominfopay.com.**
 
 **Answer: cfp-impactaction.com, zoominfopay.com**
 
+<br>
+
 ### 10.3) The attacker's ultimate goal was to deceive the victim into transferring funds via a fraudulent invoice. What is the MITRE ATT&CK technique ID that corresponds to this impact?
 
 **T1657** (Financial Theft) Financial Theft - the MITRE ATT&CK technique where adversaries steal monetary resources from targets through extortion, social engineering, or technical exploits for their own financial gain.
 
 **Answer: T1657**
+
+<br>
 
 ### 10.4) Based on the tools, TTPs, and infrastructure patterns observed in this investigation, this incident matches a known threat campaign. What is the name of this campaign?
 As this whole attack came as a result of TruffleHog scanning and successfully obtaining leaked AWS credentials, a quick google search tells us the campaign is **TruffleNet** - the adversarial campaign where hackers use stolen AWS credentials to build a large-scale framework.
