@@ -1,10 +1,10 @@
 # CyberDefenders Blue Team Investigations Writeups
 
-### A collection of CyberDefenders blue team investigations, threat hunting exercises, and incident response case studies focused on real-world SOC workflows. Each investigation documents the analytical process used to identify, investigate, and understand security events through evidence collection, timeline reconstruction, IOC analysis, ATT&CK mapping, and reporting. 
+### A structured series of various cloud (AWS) forensics and threat hunting challenges focused on isolating infrastructure breaches, initial access vectors, and malicious automation. Designed around real-world SOC workflows, each project documents the complete analytical process required to identify, investigate, and scope security events through timeline reconstruction, IOC extraction, and MITRE ATT&CK mapping.
 
 <br>
 
-### Topics span cloud, identity, email compromise, endpoint, and supply chain investigations through real-world attack scenarios involving AWS, Azure AD, phishing campaigns, and multi-stage intrusion chains using industry-standard security tools and methodologies.
+### These labs examine initial access vectors, infrastructure metadata abuse, and malicious automation. Investigations leverage CloudTrail, API activity, and Lambda telemetry to trace real-world attack vectors across your portfolio, including IMDSv1 SSRF exploits, S3 credential theft, and malicious Lambda correlations.
 
 ---
 <br>
@@ -13,11 +13,11 @@
 
 | # | Investigation | Platform | Focus | Status |
 |---|--------------|----------|-------|--------|
-| 01 | AWSWatcher	| CyberDefenders	| AWS CloudTrail, IAM abuse, API activity, cloud forensics	| Complete |
-| 02 | Rogue Azure | CyberDefenders	| Azure AD / Entra ID compromise, identity attacks, sign-in analysis | In Progress |
-| 03 | AbuSESer - Trufflenet | CyberDefenders | Business Email Compromise, AWS + Lambda correlation, IOC extraction |	Not Started |
-| 04 | CursorJack | CyberDefenders | Endpoint → cloud pivot, multi-stage intrusion, workstation compromise | Not Started |
-| 05 | Fork Bomb - TeamPCP | CyberDefenders | Supply chain attack, malicious package, cloud/environment takeover | Not Started |
+| 01 | AbuSESer - Trufflenet | CyberDefenders | AWS + Lambda correlation, Business Email Compromise, IOC extraction |	Complete |
+| 02 | AWSRaid | CyberDefenders	| Splunk, Brute-force attacks, S3 asset exfiltration, lateral movement analysis | In Progress |
+| 03 | AWSWatcher	| CyberDefenders	| AWS CloudTrail, IAM abuse, API activity, Cloud Forensics	| Complete |
+| 04 | IMDSv1 | CyberDefenders | Wireshark, jq, SSRF exploitation, Metadata service abuse, Credential theft | Not Started |
+| 05 | S3CredentialsHunt | CyberDefenders | jq, Exposed credential discovery, defense evasion (DeleteTrail) | Not Started |
 
 ---
 
