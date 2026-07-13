@@ -90,7 +90,7 @@ Since the attacker now has access, we will look at the logs following shortly af
 
 ![Q1.2](screenshots/3.png)
 
-In the very next log, see the API call accessing the S3 bucket with the name of: "maromalix-website-assets-prod-83c9fdc8"
+In the very next log, see the API call accessing the S3 bucket with the name of: **"maromalix-website-assets-prod-83c9fdc8"**
 
 **Answer: maromalix-website-assets-prod-83c9fdc8**
 
@@ -102,13 +102,13 @@ In the very next log, see the API call accessing the S3 bucket with the name of:
 
 ### 2.1) The attacker used a tool designed to scan repositories and file systems for exposed secrets, then automatically validate any discovered credentials. What is the name of this tool?
 
-We already found this above - the attacker uses TruffleHog - (TruffleNet to scan for exposed secrets then TruffleHog to validate the credentials).
+We already found this above - the attacker uses **TruffleHog** - (TruffleNet to scan for exposed secrets then TruffleHog to validate the credentials).
 
 **Answer: TruffleHog**
 
 ### 2.2) The credentials discovered by the attacker belonged to a service account. What is the name of this initially compromised user?
 
-We also found this one above. After the truffleHog validation, the next API call is from an account called "svc-jenkins," indicating this is the compromised user. 
+We also found this one above. After the truffleHog validation, the next API call is from an account called **"svc-jenkins,"** indicating this is the compromised user. 
 
 **Answer: svc-jenkins**
 
@@ -124,7 +124,7 @@ Investigating logs of the other known offensive security tool used (Pacu):
 
 ![Q3](screenshots/3.1.png)
 
-We see attempts at environment enumeration with Pacu/1.5.2. The above API call attempts listGroups but access is denied. In following logs, the attacker also tries to call listUsers which is also denied, but is able to successfully make listPolicies and listRoles calls.  
+We see attempts at environment enumeration with **Pacu/1.5.2.** The above API call attempts listGroups but access is denied. In following logs, the attacker also tries to call listUsers which is also denied, but is able to successfully make listPolicies and listRoles calls.  
 
 **Answer: Pacu/1.5.2**
 
@@ -153,18 +153,18 @@ This returns the results:
 
 ![Q4.1](screenshots/4.1.png)
 
-We can see that the first assumed role is "Maromalix-DevOps-Role," and its privilege escalation almost surely came from the successful GetSecretValue call. 
+We can see that the first assumed role is **"Maromalix-DevOps-Role,"** and its privilege escalation almost surely came from the successful GetSecretValue call. 
 
 
 **Answer: Maromalix-DevOps-Role**
 
 ### 4.2) When assuming the new role, the attacker specified a custom session name to identify their session. What was this session name?
 
-For assumed roles, the sesison name comes at the end of the arn:
+For assumed roles, the session name comes at the end of the arn:
 
 ![Q4.2](screenshots/4.2.png)
 
-We can see here the custom session name used is "DevOpsing_maromalix".
+We can see here the custom session name used is **"DevOpsing_maromalix".**
 
 **Answer: DevOpsing_maromalix**
 
@@ -180,7 +180,7 @@ When opening up one of the GetSecretValue calls:
 
 ![Q5.1](screenshots/5.png)
 
-We see the service and source of the successful event is "secretsmanager", which is a service that allows you to rotate, manage, and retrieve database credentials, API keys, and other secrets.
+We see the service and source of the successful event is **"secretsmanager"**, which is a service that allows you to rotate, manage, and retrieve database credentials, API keys, and other secrets.
 
 **Answer: Secrets Manager**
 
@@ -202,7 +202,7 @@ For some reason though, CyberDefenders didn't accept that answer, and instead ac
 
 ![Q6.1](screenshots/6.1.1.png)
 
-Which explains the confusion. The correct answer could be any of these 3, but CyberDefenders accepts maromalix/automation/ssm-credentials.
+Which explains the confusion. The correct answer could be any of these 3, but CyberDefenders accepts **maromalix/automation/ssm-credentials.**
 
 **Answer: maromalix/automation/ssm-credentials**
 
@@ -232,7 +232,23 @@ We can see in the photo in my answer to 4.1, the attacker pivoted to a role name
 
 ### 8.1) The attacker used their new role to remotely execute commands on an EC2 instance and steal its IAM credentials via the Instance Metadata Service (IMDS). Provide the API call used to execute commands and the instance ID of the compromised machine, separated by a comma.
 
-**Answer:**
+Viewing the logs coming from the assumedRole of "Maromalix-SSM-Automation-Role," the only eventName that is indicative of remote execution would be **"SendCommand,"** which also occurs just before the logs of the next assumedRole of "Maromalix-EC2-WebApp-Role" come in so this is very likely the remote execution: 
+
+![Q8](screenshots/8.0.png)
+
+Opening up the SendCommand API call log:
+
+![Q8](screenshots/8.png)
+
+We can indeed see here that a script was run against SSM (Systems Manager - can run commands to EC2 through SSM), and even though the responseElements.command.parameters and requestParameters.parameters are both "HIDDEN_DUE_TO_SECURITY_REASONS", we can infer given the subsequent API calls from the EC2 role that this script was responsible for stealing the IAM credentials.
+
+For the second part of the question (finding instance ID of the compromised machine), we need to go into the log from the new role:
+
+![Q8](screenshots/8.2.png)
+
+We know from question 4.2 that for assumed roles, the session name comes at the end of the arn which we can see here is **"i-0afb277aeec0e6fa4."**
+
+**Answer: SendCommand, i-0afb277aeec0e6fa4**
 
 ---
 
@@ -242,11 +258,23 @@ We can see in the photo in my answer to 4.1, the attacker pivoted to a role name
 
 ### 9.1) With EC2 instance credentials, the attacker enumerated Lambda functions by downloading their configurations and code. What is the name of the first Lambda function the attacker retrieved?
 
-**Answer:**
+We can see above that there are multiple API calls called "GetFunction20150331v2," so we will open the first one:
+
+![Q9.1](screenshots/9.1.png)
+
+Here we can see the first Lambda function that the attacker retrieved is **"functionName: maromalix-daily-backup"**.
+
+**Answer: maromalix-daily-backup**
 
 ### 9.2) After examining multiple functions, the attacker identified one suitable for their attack. What is the name of the Lambda function he used to send fraudulent emails?
 
-**Answer:**
+After analyzing the other 3 GetFunction20150331v2 calls, one was a second daily-backup call, and the other 2 were **"maromalix-email-notifications,"** and given these two "Invoke" calls: 
+
+![Q9.2](screenshots/9.2.png)
+
+Were both "requestParameters.functionName: arn:aws:lambda:us-east-1:592694688519:function:maromalix-email-notifications", we know it is this lambda function.
+
+**Answer: maromalix-email-notifications**
 
 ---
 
