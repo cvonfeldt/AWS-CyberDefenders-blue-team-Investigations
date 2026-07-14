@@ -18,40 +18,52 @@
 
 ### Attack Chain: 
 
-                        TruffleHog discovers leaked AWS credentials (svc-jenkins)
+                      TruffleHog discovers exposed AWS credentials (svc-jenkins)
                                                 ↓
-                       STS GetCallerIdentity validates compromised access keys
+                     Attacker validates credentials and begins AWS reconnaissance
                                                 ↓
-                      IAM enumeration and privilege escalation with Pacu v1.5.2
+                    Pacu v1.5.2 used for IAM enumeration and privilege escalation
                                                 ↓
-                         AssumeRole abuse → Maromalix-DevOps-Role obtained
+                         Attacker assumes privileged Maromalix-DevOps-Role
                                                 ↓
-                        AWS Secrets Manager enumerated and secrets stolen
+                       Secrets Manager targeted to obtain sensitive credentials
                                                 ↓
-                        Stolen secrets enable access to SSM Automation Role
+                    Stolen credentials enable access to AWS automation resources
                                                 ↓
-                          SSM SendCommand executed against production EC2
+                      SSM SendCommand used to execute commands on production EC2
                                                 ↓
-                        IMDS credentials harvested from compromised instance
+                      EC2 instance credentials harvested through instance metadata
                                                 ↓
-                           EC2 IAM role leveraged for further AWS access
+                      Compromised IAM roles leveraged for additional discovery
                                                 ↓
-                            Lambda functions enumerated and downloaded
+                     Lambda functions enumerated and application logic reviewed
                                                 ↓
-                             maromalix-email-notifications identified
+                      maromalix-email-notifications identified as abuse target
                                                 ↓
-                           Lambda invoked to send fraudulent invoice emails
+                       Lambda function abused to distribute fraudulent emails
                                                 ↓
-                         BEC campaign attempts ACH wire fraud against victims
-      
+                      BEC campaign delivers fake invoices and ACH fraud attempts
+          
 ---
 
 <br> 
 
 ## Indicators of Compromise:
 
-| IOC Type                  | Value               |
-| -------------------------- | -------------------- |
+| Type               | Indicator                                          | Context                                                   |
+| ------------------ | -------------------------------------------------- | --------------------------------------------------------- |
+| Source IP          | `52.59.194.168`                                    | External attacker source                                  |
+| Tool/User-Agent    | `TruffleHog`                                       | Credential discovery activity                             |
+| Tool/User-Agent    | `Pacu/1.5.2`                                       | AWS exploitation framework                                |
+| IAM Session        | `DevOpsing_maromalix`                              | Suspicious attacker-created role session                  |
+| IAM Activity       | Unexpected AssumeRole into `Maromalix-DevOps-Role` | Privilege escalation/persistence                          |
+| AWS Activity       | Bulk `GetSecretValue` access                       | Suspicious secret harvesting                              |
+| AWS Activity       | `ssm:SendCommand` against production EC2           | Remote command execution                                  |
+| Lambda Function    | `maromalix-email-notifications`                    | Application function abused for fraudulent email delivery |
+| Email Artifact     | `billing@techcorp.live`                            | Fraudulent invoice recipient                              |
+| Domain             | `zoominfopay.com`, `cfp-impactaction.com`          | Attacker-associated domains                               |
+| Financial Artifact | `ACH Account 15100443938308`                       | Fraud payment destination                                 |
+
 
 ---
 
