@@ -18,6 +18,32 @@
 
 ### Attack Chain: 
 
+                        TruffleHog discovers leaked AWS credentials (svc-jenkins)
+                                                ↓
+                       STS GetCallerIdentity validates compromised access keys
+                                                ↓
+                      IAM enumeration and privilege escalation with Pacu v1.5.2
+                                                ↓
+                         AssumeRole abuse → Maromalix-DevOps-Role obtained
+                                                ↓
+                        AWS Secrets Manager enumerated and secrets stolen
+                                                ↓
+                        Stolen secrets enable access to SSM Automation Role
+                                                ↓
+                          SSM SendCommand executed against production EC2
+                                                ↓
+                        IMDS credentials harvested from compromised instance
+                                                ↓
+                           EC2 IAM role leveraged for further AWS access
+                                                ↓
+                            Lambda functions enumerated and downloaded
+                                                ↓
+                             maromalix-email-notifications identified
+                                                ↓
+                           Lambda invoked to send fraudulent invoice emails
+                                                ↓
+                         BEC campaign attempts ACH wire fraud against victims
+      
 ---
 
 <br> 
