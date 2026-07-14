@@ -71,8 +71,16 @@
 
 ## MITRE ATT&CK Mapping:
 
-| ATT&CK ID | Technique                                                | Evidence                                        |
-| --------- | -------------------------------------------------------- | ----------------------------------------------- |
+| ATT&CK ID | Technique                                   | Evidence                                        |
+| --------- | ------------------------------------------- | ----------------------------------------------- |
+| T1552.001 | Unsecured Credentials: Credentials In Files | TruffleHog discovered exposed AWS credentials.  |
+| T1078.004 | Valid Accounts: Cloud Accounts              | Stolen credentials used for AWS access.         |
+| T1087.004 | Account Discovery: Cloud Account            | Pacu enumerated IAM resources.                  |
+| T1098     | Account Manipulation                        | Attacker assumed privileged IAM role.           |
+| T1555     | Credentials from Password Stores            | Secrets Manager secrets accessed.               |
+| T1021.007 | Remote Services: Cloud Services             | SSM used for command execution on EC2.          |
+| T1526     | Cloud Service Discovery                     | Lambda and AWS resources enumerated.            |
+| T1657     | Financial Theft                             | Fraudulent invoices used for ACH payment fraud. |
 
 ---
 
