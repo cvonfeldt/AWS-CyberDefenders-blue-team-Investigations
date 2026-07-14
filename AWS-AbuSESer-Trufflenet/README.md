@@ -394,6 +394,6 @@ As this whole attack came as a result of TruffleHog scanning and successfully ob
 
 <br>
 
-## 10. Completed:
+## Completed:
 
 ![done](screenshots/complete.png)
