@@ -18,31 +18,31 @@
 
 ### Attack Chain: 
 
-                      TruffleHog discovers exposed AWS credentials (svc-jenkins)
-                                                ↓
-                     Attacker validates credentials and begins AWS reconnaissance
-                                                ↓
-                    Pacu v1.5.2 used for IAM enumeration and privilege escalation
-                                                ↓
-                         Attacker assumes privileged Maromalix-DevOps-Role
-                                                ↓
-                       Secrets Manager targeted to obtain sensitive credentials
-                                                ↓
-                    Stolen credentials enable access to AWS automation resources
-                                                ↓
-                      SSM SendCommand used to execute commands on production EC2
-                                                ↓
-                      EC2 instance credentials harvested through instance metadata
-                                                ↓
-                      Compromised IAM roles leveraged for additional discovery
-                                                ↓
-                     Lambda functions enumerated and application logic reviewed
-                                                ↓
-                      maromalix-email-notifications identified as abuse target
-                                                ↓
-                       Lambda function abused to distribute fraudulent emails
-                                                ↓
-                      BEC campaign delivers fake invoices and ACH fraud attempts
+                                    TruffleHog discovers exposed AWS credentials (svc-jenkins)
+                                                              ↓
+                                   Attacker validates credentials and begins AWS reconnaissance
+                                                              ↓
+                                  Pacu v1.5.2 used for IAM enumeration and privilege escalation
+                                                              ↓
+                                       Attacker assumes privileged Maromalix-DevOps-Role
+                                                              ↓
+                                     Secrets Manager targeted to obtain sensitive credentials
+                                                              ↓
+                                  Stolen credentials enable access to AWS automation resources
+                                                              ↓
+                                    SSM SendCommand used to execute commands on production EC2
+                                                              ↓
+                                    EC2 instance credentials harvested through instance metadata
+                                                              ↓
+                                    Compromised IAM roles leveraged for additional discovery
+                                                              ↓
+                                   Lambda functions enumerated and application logic reviewed
+                                                              ↓
+                                    maromalix-email-notifications identified as abuse target
+                                                              ↓
+                                     Lambda function abused to distribute fraudulent emails
+                                                              ↓
+                                    BEC campaign delivers fake invoices and ACH fraud attempts
           
 ---
 
