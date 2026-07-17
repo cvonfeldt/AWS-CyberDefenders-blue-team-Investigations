@@ -80,7 +80,7 @@ sorted in asc order and opened first getObject log:
 
 timestamp is 2023-11-02T09:55:53Z
 
-**Answer: 2023-11-02 09:55**
+**Answer: 2023-11-02 09:55**. (writeup for this question not done yet)
 
 ---
 
