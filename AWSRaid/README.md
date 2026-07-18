@@ -2,6 +2,8 @@
 
 ## Your organization utilizes AWS to host critical data and applications. An incident has been reported that involves unauthorized access to data and potential exfiltration. The security team has detected unusual activities and needs to investigate the incident to determine the scope of the attack.
 
+![Overview](screenshots/OV.png)
+
 <br>
 
 ### Methodology: 
