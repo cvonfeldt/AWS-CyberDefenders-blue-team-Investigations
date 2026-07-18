@@ -179,3 +179,11 @@ Searching for eventName == "DeleteBucket," we see this also in log file 4:
 The request ID of the API call is "XT27FP62J3ACKDNW"
 
 **Answer: XT27FP62J3ACKDNW**
+
+---
+
+<br>
+
+**Complete:**
+
+![complete](screenshots/complete.png)
