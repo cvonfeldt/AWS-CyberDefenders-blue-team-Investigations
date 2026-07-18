@@ -36,8 +36,14 @@
 
 ## Indicators of Compromise:
 
-| IOC Type                  | Value               |
-| -------------------------- | -------------------- |
+| Type           | Indicator                                                                     |
+| -------------- | ----------------------------------------------------------------------------- |
+| Authentication | 9 consecutive failed logins followed by a successful login to `helpdesk.luke` |
+| AWS API        | `PutBucketPublicAccessBlock` modifying bucket security                        |
+| AWS API        | `CreateUser` creating `marketing.mark`                                        |
+| AWS API        | `AddUserToGroup` adding `marketing.mark` to `Admins`                          |
+| AWS API        | Unusual `GetObject` activity against sensitive S3 buckets                     |
+
 
 ---
 
@@ -45,8 +51,15 @@
 
 ## MITRE ATT&CK Mapping:
 
-| ATT&CK ID | Technique                                                | Evidence                                        |
-| --------- | -------------------------------------------------------- | ----------------------------------------------- |
+| ATT&CK ID     | Technique                                                                                      | Evidence                                                                                                     |
+| ------------- | ---------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------ |
+| **T1110.001** | Brute Force: Password Guessing                                                                 | `helpdesk.luke` experienced multiple failed authentication attempts followed by a successful login.          |
+| **T1078.004** | Valid Accounts: Cloud Accounts                                                                 | The attacker authenticated using the compromised `helpdesk.luke` account.                                    |
+| **T1530**     | Data from Cloud Storage                                                                        | S3 objects, including `prototype.obj` and `Product2_CAD_Designs.dwg`, were accessed and downloaded.          |
+| **T1098**     | Account Manipulation                                                                           | A new IAM user (`marketing.mark`) was created and added to the `Admins` group to establish persistence.      |
+| **T1098.003** | Additional Cloud Roles *(or Cloud Account Permissions)*                                        | The newly created account was granted administrative privileges through group membership.                    |
+| **T1562.007** | Impair Defenses: Disable or Modify Cloud Firewall *(closest fit for weakening cloud security)* | The attacker modified S3 public access settings on `backup-and-restore98825501`, reducing security controls. |
+
 
 ---
 
