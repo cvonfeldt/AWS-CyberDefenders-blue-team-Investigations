@@ -14,21 +14,21 @@
 
 ### Attack Chain: 
 
-                                           Brute-force attack compromises helpdesk.luke account
-                                                                    ↓
-                                             Attacker authenticates with valid AWS credentials
-                                                                    ↓
-                                                S3 buckets enumerated and objects accessed
-                                                                    ↓
-                                        Sensitive files, including CAD designs, downloaded from S3
-                                                                    ↓
-                                         S3 bucket configuration modified to allow public access
-                                                                    ↓
-                                                 New IAM user "marketing.mark" created
-                                                                    ↓
-                                            marketing.mark added to the privileged "Admins" group
-                                                                    ↓
-                                           Persistence established through privileged IAM account
+                                         Brute-force attack compromises helpdesk.luke account
+                                                                  ↓
+                                           Attacker authenticates with valid AWS credentials
+                                                                  ↓
+                                              S3 buckets enumerated and objects accessed
+                                                                  ↓
+                                      Sensitive files, including CAD designs, downloaded from S3
+                                                                  ↓
+                                       S3 bucket configuration modified to allow public access
+                                                                  ↓
+                                               New IAM user "marketing.mark" created
+                                                                  ↓
+                                          marketing.mark added to the privileged "Admins" group
+                                                                  ↓
+                                         Persistence established through privileged IAM account
                                
 ---
 
