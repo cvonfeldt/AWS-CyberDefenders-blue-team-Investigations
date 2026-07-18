@@ -68,8 +68,21 @@ But one in particular where the full URI is indicative of stealing server-side c
 
 ### 3. The attacker executed an AWS CLI command, similar to whoami in traditional systems, to retrieve information about the IAM user or role associated with the operation. When exactly did he execute that command?
 
+Using "jq '.events[] | .message | fromjson | .eventName' 124355653975_CloudTrail_eu-central-1-logs.json | sort | uniq":
 
-**Answer:**
+![Q3](screenshots/Q3.0.png)
+
+We see that there is nothing that would give us the equivalent of whoami, so then we check in the second file and nothing, and then the third:
+
+![Q3](screenshots/Q3.png)
+
+And we see GetCallerIdentity, so we know it's in the 3rd cloudwatch file. Now we need to see when it was:
+
+![Q3](screenshots/Q3.1.png)
+
+Searching for the full message of the event, we see the timestamp of 2024-10-15T10:20:45Z
+
+**Answer: 2024-10-15 10:20**
 
 ---
 
