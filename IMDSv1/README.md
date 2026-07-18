@@ -10,6 +10,8 @@
 
 ### Methodology: 
 
+**We will use a PCAP file and CloudWatch Logs from the incident for analysis. The goal is to identify the attacker's actions, determine the compromised resources, and assess the overall scope and impact of the breach.**
+
 ---
 
 <br>
