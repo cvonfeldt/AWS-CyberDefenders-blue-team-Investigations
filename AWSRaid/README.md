@@ -53,11 +53,11 @@ It seems like the eventName field would help us narrow down which account was co
 
 ![Q1](screenshots/1.00.png)
 
-check users associated with logins and it was luke 
+Then I check users associated with logins and helpdesk.luke catches our eye with lots of events. 
 
 ![Q1](screenshots/1.01.png)
 
-indicative of brute force (9 failed logins followed by success starting at 9:53:27.000 AM w 2-5 secs between each)
+Checking the helpdesk.luke login logs, we see its indicative of brute force (9 failed logins followed by success starting at 9:53:27.000 AM w 2-5 secs between each)
 
 **Answer: helpdesk.luke**
 
@@ -66,19 +66,19 @@ indicative of brute force (9 failed logins followed by success starting at 9:53:
 
 ### 2. We must investigate the events following the initial compromise to understand the attacker's motives. What is the timestamp for the first access to an S3 object by the attacker?
 
-checked for eventnames associated to helpdesk.luke:
+First we check for eventnames associated with the compromised account - helpdesk.luke:
 
 ![Q2](screenshots/2.png)
 
-found bucketName field, found only getObject could be the accessing of the S3 bucket: 
+Here we found bucketName field - only getObject could be the accessing of the S3 bucket: 
 
 ![Q2](screenshots/2.1.png)
 
-sorted in asc order and opened first getObject log: 
+Then I sorted in chronological order and opened first getObject log: 
 
 ![Q2](screenshots/2.2.png)
 
-timestamp is 2023-11-02T09:55:53Z
+Here we see the timestamp of the first s3 bucket access is 2023-11-02T09:55:53Z
 
 **Answer: 2023-11-02 09:55**. (writeup for this question not done yet)
 
@@ -98,20 +98,39 @@ Here we can see that the file "Product2_CAD_Designs.dwg" was from the bucket "pr
 ### 4. We've identified changes to a bucket's configuration that allowed public access, a significant security concern. What is the name of this particular S3 bucket?
 We can see in #2 a call called PutBucketPublicAccessBlock, so let's analyze it:
 
+For this we know the API call will start with "PutBucket..." since all bucket access changing api calls start with that. Searching for that we only find one result which makes things really easy: 
 
-**Answer:**
+![Q4](screenshots/4.0.png)
+
+**Answer: backup-and-restore98825501**
 
 ---
 
 ### 5. Creating a new user account is a common tactic attackers use to establish persistence in a compromised environment. What is the username of the account created by the attacker?
 
-**Answer:**
+For this we search for eventName="*user*" assuming the event for creating a user will have that in it and we see the eventName which is simply named CreateUser which only has 1 event:
+
+![Q5](screenshots/5.0.png)
+
+Clicking into the 1 event we have our username: 
+
+![Q5](screenshots/5.1.png)
+
+**Answer: marketing.mark**
 
 ---
 
 ### 6. Following account creation, the attacker added the account to a specific group. What is the name of the group to which the account was added?
 
-**Answer:**
+Querying for only results with userName marketing.mark, we see the event of AddUserToGroup with 1 event:
+
+![Q6](screenshots/6.png)
+
+Clicking into the 1 event, we see the group it was added to:
+
+![Q6](screenshots/6.1.png)
+
+**Answer: Admins**
 
 ---
 
