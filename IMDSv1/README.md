@@ -1,5 +1,11 @@
 # Overview: 
 
+### On October 15, 2024, a security breach occurred involving a web application named "Visa Checker," which was hosted on an AWS EC2 instance. The attacker exploited a Server-Side Request Forgery (SSRF) vulnerability within the application, enabling them to steal IAM role credentials. With these compromised credentials, the attacker gained unauthorized access to sensitive information stored in Amazon S3 bucket. This S3 bucket contained data on approximately 20 million tourists.
+
+**The attacker leveraged the stolen credentials to perform various unauthorized actions within the AWS environment, including data exfiltration. To evade detection, the attacker routed their traffic through multiple Tor exit nodes, using anonymized IP addresses to obscure their true location, making it difficult to trace the source of the attack.**
+
+![Overview](screenshots/OV.png)
+
 <br>
 
 ### Methodology: 
