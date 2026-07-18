@@ -43,15 +43,26 @@
 ## Investigation:
 
 ### 1. The attacker tested the SSRF vulnerability by accessing an external website. What URL was used to conduct this test?
+For this we should analyze http packets in wireshark: 
 
-**Answer:**
+![Q1](screenshots/Q1.png)
+
+We see lots of get requests from visa-status app to http://visa-checker-atlantes.com, but this is the legit GET request that the app is intended to make. We see a request to google however from IP:45.84.107.198. 
+
+**Answer: http://www.google.com**
 
 ---
 
 
 ### 2. The attacker exploited the vulnerable website to send requests, ultimately obtaining the IAM role credentials. What is the exact URI used in the request made by the webserver to acquire these credentials?
 
-**Answer:**
+There are lots of server-side requests to 169.254.169.254:
+
+![Q2](screenshots/Q2.png)
+
+But one in particular where the full URI is indicative of stealing server-side credentials.  
+
+**Answer: http://169.254.169.254/latest/meta-data/iam/security-credentials/EC2-S3-Visa**
 
 ---
 
