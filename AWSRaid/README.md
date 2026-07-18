@@ -96,9 +96,9 @@ Here we can see that the file "Product2_CAD_Designs.dwg" was from the bucket "pr
 ---
 
 ### 4. We've identified changes to a bucket's configuration that allowed public access, a significant security concern. What is the name of this particular S3 bucket?
-We can see in #2 a call called PutBucketPublicAccessBlock, so let's analyze it:
+We can see in #2 a call called PutBucketPublicAccessBlock, so let's analyze it.
 
-For this we know the API call will start with "PutBucket..." since all bucket access changing api calls start with that. Searching for that we only find one result which makes things really easy: 
+Searching for that we only find one result which makes things really easy: 
 
 ![Q4](screenshots/4.0.png)
 
