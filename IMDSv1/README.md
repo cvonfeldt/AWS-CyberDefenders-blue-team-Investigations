@@ -18,29 +18,27 @@
 
 ### Attack Chain: 
 
-### Attack Chain:
-
-                                 SSRF vulnerability identified using an external URL
-                                                      ↓
-                            EC2 Instance Metadata Service (IMDS) queried via SSRF
-                                                      ↓
-                               IAM role credentials stolen from the EC2 instance
-                                                      ↓
-                                  Stolen credentials validated with AWS STS
-                                                      ↓
-                              AWS environment and S3 buckets enumerated via AWS CLI
-                                                      ↓
-                        Sensitive tourist data identified in tourists-visa-info bucket
-                                                      ↓
-                              S3 objects downloaded and data exfiltrated (~5.45 GB)
-                                                      ↓
-                             Persistence attempt by creating a new IAM user (failed)
-                                                      ↓
-                            Attempts made to terminate the EC2 instance (unauthorized)
-                                                      ↓
-                            S3 objects deleted, followed by deletion of the S3 bucket
-                                                      ↓
-                              Tor exit nodes used throughout to anonymize activity
+                                         SSRF vulnerability identified using an external URL
+                                                              ↓
+                                    EC2 Instance Metadata Service (IMDS) queried via SSRF
+                                                              ↓
+                                       IAM role credentials stolen from the EC2 instance
+                                                              ↓
+                                          Stolen credentials validated with AWS STS
+                                                              ↓
+                                      AWS environment and S3 buckets enumerated via AWS CLI
+                                                              ↓
+                                Sensitive tourist data identified in tourists-visa-info bucket
+                                                              ↓
+                                      S3 objects downloaded and data exfiltrated (~5.45 GB)
+                                                              ↓
+                                     Persistence attempt by creating a new IAM user (failed)
+                                                              ↓
+                                    Attempts made to terminate the EC2 instance (unauthorized)
+                                                              ↓
+                                    S3 objects deleted, followed by deletion of the S3 bucket
+                                                              ↓
+                                      Tor exit nodes used throughout to anonymize activity
 ---
 
 <br> 
