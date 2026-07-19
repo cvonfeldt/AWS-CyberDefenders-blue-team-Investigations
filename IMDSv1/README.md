@@ -23,19 +23,19 @@
                                                         ↓
                                   IAM role credentials stolen from the EC2 instance
                                                         ↓
-                                   Stolen credentials validated with AWS STS
+                                     Stolen credentials validated with AWS STS
                                                         ↓
-                                 AWS resources and S3 buckets enumerated via AWS CLI
+                                   AWS resources and S3 buckets enumerated via AWS CLI
                                                         ↓
-                              Sensitive tourist data identified in tourists-visa-info
+                               Sensitive tourist data identified in tourists-visa-info
                                                         ↓
                                   S3 objects downloaded and data exfiltrated (~5.45 GB)
                                                         ↓
                               Attempt to terminate the EC2 instance (failed - unauthorized)
                                                         ↓
-                                 Attempt to create a new IAM user for persistence (failed)
+                               Attempt to create a new IAM user for persistence (failed)
                                                         ↓
-                              S3 objects deleted from tourists-visa-info bucket
+                                S3 objects deleted from tourists-visa-info bucket
                                                         ↓
                                        S3 bucket deleted to destroy evidence
                                                         ↓
