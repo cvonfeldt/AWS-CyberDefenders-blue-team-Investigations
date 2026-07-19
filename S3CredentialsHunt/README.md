@@ -105,11 +105,11 @@ We can see in #1 that the attacker is under an "AssumedRole".
 
 ### 5. From the previous question, you determined the attacker's access type; now, you need to figure out what resources the attacker has access to. What is the name of the role the attacker takes advantage of to escalate his privilege in the environment?
 
-In #3 we see CreateUser is one of the eventNames associated with the attacker IP, so we analyze this log to see what the name of the role is: 
+In #3 we see CreateUser is one of the eventNames associated with the attacker IP, and we know creating a user would need to be done with escalated privileges, so we analyze this log to see what the name of the role is: 
 
 ![Q5](screenshots/5.png)
 
-Here we see that the new user created by the attacker is "Sudo_DevOps"
+Here we see that the role taken advantage of is "Sudo_DevOps"
 
 **Answer: Sudo_DevOps**
 
@@ -117,29 +117,58 @@ Here we see that the new user created by the attacker is "Sudo_DevOps"
 
 ### 6. In AWS, to enhance security, users are granted temporary access to specific resources when they assume a role. This action results in the creation of a session, characterized by a unique name and credentials. To trace the attacker's TTPs, can you identify the name of the session they initiated?
 
-**Answer:**
+Again referencing #3 of the unique eventNames from attacker IP, we see "AssumeRole," which we know will have info about the associated sesison name:
+
+![Q6](screenshots/6.png)
+
+Analyzing those logs we see that the sesison name is "sudo_session".
+
+**Answer: sudo_session**
 
 ---
 
 ### 7. To effectively mitigate risks, it's crucial to determine whether the attacker attempted to establish persistence for ongoing access. Can you identify the name of the user the attacker created to maintain a foothold on the machine?
 
-**Answer:**
+Analyzing the "CreateUser" call logs deeper, we see that:
+
+![Q7](screenshots/7.png)
+
+The user created is "root_admin_adam".
+
+**Answer: root_admin_adam**
 
 ---
 
 ### 8. The attacker leveraged several techniques to access the account they created. What is the event name associated with their initial method?
+Again referencing #3 of the unique eventNames from attacker IP, we see 2 potential events that could fit here: "CreateLoginProfile," and "CreateAccessKey," and between those we know that CreateLoginProfile would need to come first, and then creating an access key would follow, so it must be "CreateLoginProfile".
 
-**Answer:**
+**Answer: CreateLoginProfile**
 
 
 ---
 
 ### 9. What is the name of the group the attacker added the newly created user to?
+Referencing #3 yet again, we see the eventName "AddUserToGroup," so we will analyze this file deeper: 
 
-**Answer:**
+![Q9](screenshots/9.png)
+
+And we see the group that root_admin_adam was added to is "Administrators".
+
+**Answer: Administrators**
 
 ---
 
-### 10. Sophisticated threat actors often attempt to conceal their TTPs. Can you provide the exact time CloudTrail logging was disabled?
 
-**Answer:**
+### 10. Sophisticated threat actors often attempt to conceal their TTPs. Can you provide the exact time CloudTrail logging was disabled?
+We see in the photo in #1 the exact timestamp of the "DeleteTrail" event: 2023-08-18T04:16:36Z
+
+**Answer: 2023-08-18 04:16**
+
+
+---
+
+<br>
+
+**Complete:**
+
+![complete](screenshots/complete.png)
