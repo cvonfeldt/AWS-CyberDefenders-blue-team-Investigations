@@ -16,8 +16,8 @@
 | 01 | AbuSESer - Trufflenet | CyberDefenders | AWS + Lambda correlation, Business Email Compromise, IOC extraction |	Complete |
 | 02 | AWSRaid | CyberDefenders	| Splunk, Brute-force attacks, S3 asset exfiltration, lateral movement analysis | Complete |
 | 03 | AWSWatcher	| CyberDefenders	| AWS CloudTrail, IAM abuse, API activity, Cloud Forensics	| Complete |
-| 04 | IMDSv1 | CyberDefenders | Wireshark, jq, SSRF exploitation, Metadata service abuse, Credential theft | In Progress |
-| 05 | S3CredentialsHunt | CyberDefenders | jq, Exposed credential discovery, defense evasion (DeleteTrail) | Not Started |
+| 04 | IMDSv1 | CyberDefenders | Wireshark, jq, SSRF exploitation, Metadata service abuse, Credential theft | Complete |
+| 05 | S3CredentialsHunt | CyberDefenders | jq, Exposed credential discovery, defense evasion (DeleteTrail) | In Progress |
 
 ---
 
