@@ -46,8 +46,16 @@
 
 ## Indicators of Compromise:
 
-| IOC Type                  | Value               |
-| -------------------------- | -------------------- |
+| IOC Type   | Indicator                                                                      | Context                                                                            |
+| ---------- | ------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------- |
+| Source IP  | `147.45.78.34`                                                                 | Tor exit node used for AWS API activity.                                           |
+| Source IP  | `109.70.100.67`                                                                | Tor exit node associated with attacker activity.                                   |
+| Source IP  | `185.220.100.243`                                                              | Tor exit node used during attempted EC2 termination.                               |
+| Source IP  | `193.189.100.204`                                                              | Tor exit node used during destructive S3 deletion activity.                        |
+| URI        | `http://169.254.169.254/latest/meta-data/iam/security-credentials/EC2-S3-Visa` | EC2 Instance Metadata Service endpoint targeted to steal IAM credentials via SSRF. |
+| User-Agent | `aws-cli/2.18.5`                                                               | AWS CLI version used to perform unauthorized API operations.                       |
+| IAM Role   | `EC2-S3-Visa`                                                                  | Compromised EC2 instance role whose temporary credentials were stolen.             |
+| S3 Bucket  | `tourists-visa-info`                                                           | Sensitive bucket targeted for enumeration, exfiltration, and deletion.             |
 
 ---
 
@@ -55,8 +63,15 @@
 
 ## MITRE ATT&CK Mapping:
 
-| ATT&CK ID | Technique                                                | Evidence                                        |
-| --------- | -------------------------------------------------------- | ----------------------------------------------- |
+| ATT&CK ID     | Technique                                          | Evidence                                                                                                                   |
+| ------------- | -------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
+| **T1190**     | Exploit Public-Facing Application                  | The attacker exploited an SSRF vulnerability in the Visa Checker web application to gain access to internal AWS resources. |
+| **T1552.005** | Unsecured Credentials: Cloud Instance Metadata API | The attacker queried the EC2 Instance Metadata Service (`169.254.169.254`) to obtain temporary IAM role credentials.       |
+| **T1078.004** | Valid Accounts: Cloud Accounts                     | Stolen IAM role credentials were used to authenticate to AWS and perform unauthorized API operations.                      |
+| **T1526**     | Cloud Service Discovery                            | AWS resources, including S3 buckets, were enumerated using the compromised credentials.                                    |
+| **T1530**     | Data from Cloud Storage                            | Sensitive data was enumerated and exfiltrated from the `tourists-visa-info` S3 bucket.                                     |
+| **T1098**     | Account Manipulation                               | The attacker attempted to create a new IAM user to establish persistence but lacked sufficient permissions.                |
+| **T1485**     | Data Destruction                                   | S3 objects and the bucket itself were deleted following data exfiltration.                                                 |
 
 ---
 
