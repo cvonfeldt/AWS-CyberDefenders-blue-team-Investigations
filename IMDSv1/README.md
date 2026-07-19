@@ -17,29 +17,29 @@
 <br>
 
 ### Attack Chain: 
-                                          SSRF vulnerability tested using an external URL
-                                                                ↓
-                                        EC2 Instance Metadata Service (IMDS) accessed via SSRF
-                                                                ↓
-                                          IAM role credentials stolen from the EC2 instance
-                                                                ↓
-                                            Stolen credentials validated with AWS STS
-                                                                ↓
-                                          AWS resources and S3 buckets enumerated via AWS CLI
-                                                                ↓
-                                       Sensitive tourist data identified in tourists-visa-info
-                                                                ↓
-                                        S3 objects downloaded and data exfiltrated (~5.45 GB)
-                                                                ↓
+                                            SSRF vulnerability tested using an external URL
+                                                                  ↓
+                                          EC2 Instance Metadata Service (IMDS) accessed via SSRF
+                                                                  ↓
+                    IAM role credentials stolen from the EC2 instance (everything from here on out done through Tor exit nodes)
+                                                                  ↓
+                                              Stolen credentials validated with AWS STS
+                                                                  ↓
+                                            AWS resources and S3 buckets enumerated via AWS CLI
+                                                                  ↓
+                                         Sensitive tourist data identified in tourists-visa-info
+                                                                  ↓
+                                          S3 objects downloaded and data exfiltrated (~5.45 GB)
+                                                                  ↓
                                       Attempt to terminate the EC2 instance (failed - unauthorized)
-                                                                ↓
-                                       Attempt to create a new IAM user for persistence (failed)
-                                                                ↓
-                                        S3 objects deleted from tourists-visa-info bucket
-                                                                ↓
-                                               S3 bucket deleted to destroy evidence
-                                                                ↓
-                                        Activity routed through Tor exit nodes for anonymity
+                                                                  ↓
+                                         Attempt to create a new IAM user for persistence (failed)
+                                                                  ↓
+                                          S3 objects deleted from tourists-visa-info bucket
+                                                                  ↓
+                                                 S3 bucket deleted to destroy evidence
+                                                                  ↓
+                                          Activity routed through Tor exit nodes for anonymity
 ---
 
 <br> 
@@ -122,7 +122,7 @@ Looking into logs with that name specifically, there is only log:
 
 ![Q4](screenshots/4.1.png)
 
-We see the error code as well as a sourceIP of 185.220.100.243, which is why the previous queries weren't working - I guess the attacker used a separate device to try to terminate the instance after getting the ID. 
+We see the error code as well as a sourceIP of 185.220.100.243, which is why the previous queries weren't working - I guess the attacker used a separate device to try to terminate the instance after getting the ID. Looking back on the lab objective, we see the bit about tor exit nodes - so this makes total sense here.
 
 **Answer: Client.UnauthorizedOperation**
 
