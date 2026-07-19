@@ -109,7 +109,7 @@ In #3 we see CreateUser is one of the eventNames associated with the attacker IP
 
 ![Q5](screenshots/5.png)
 
-Here we see that the role taken advantage of is "Sudo_DevOps"
+Here we see that the role taken advantage of is "Sudo_DevOps". We also see this in #1 but just wanted to double check here.
 
 **Answer: Sudo_DevOps**
 
