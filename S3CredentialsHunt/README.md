@@ -16,23 +16,23 @@
 
 ### Attack Chain: 
 
-                                                              Initial Access
-                                                                    ↓
-                                                    Exposed AWS credentials discovered
-                                                                    ↓
-                  Compromised devops_kate credentials retrieved from S3: shared-docs-repository/technical-specs/devops_kate_accessKeys
-                                                                    ↓
-                                              Attacker authenticates using stolen AWS credentials
-                                                                    ↓
-                                                      S3 Discovery and Data Access
-                                                                    ↓
-                           Privilege Escalation via IAM Role Assumption with Role: Sudo_DevOps and Session: sudo_session
-                                                                    ↓
-                                          Persistence Established, Created IAM User root_admin_adam
-                                                                    ↓
-                                            Privilege Expansion, Added User to Administrators Group
-                                                                    ↓
-                                                    Defense Evasion, CloudTrail Deleted
+                                                        Initial Access
+                                                              ↓
+                                              Exposed AWS credentials discovered
+                                                              ↓
+            Compromised devops_kate credentials retrieved from S3: shared-docs-repository/technical-specs/devops_kate_accessKeys
+                                                              ↓
+                                        Attacker authenticates using stolen AWS credentials
+                                                              ↓
+                                                S3 Discovery and Data Access
+                                                              ↓
+                     Privilege Escalation via IAM Role Assumption with Role: Sudo_DevOps and Session: sudo_session
+                                                              ↓
+                                    Persistence Established, Created IAM User root_admin_adam
+                                                              ↓
+                                      Privilege Expansion, Added User to Administrators Group
+                                                              ↓
+                                              Defense Evasion, CloudTrail Deleted
 
 ---
 
