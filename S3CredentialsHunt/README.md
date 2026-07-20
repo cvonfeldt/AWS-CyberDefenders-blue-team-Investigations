@@ -40,8 +40,15 @@
 
 ## Indicators of Compromise:
 
-| IOC Type                  | Value               |
-| -------------------------- | -------------------- |
+| Type                    | Indicator                                                       | Context                                                                       |
+| ----------------------- | --------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| Attacker IP             | `185.5.248.11`                                                  | External IP associated with unauthorized AWS activity and CloudTrail deletion |
+| Exposed Credential File | `shared-docs-repository/technical-specs/devops_kate_accessKeys` | S3 object containing compromised AWS credentials used for initial access      |
+| IAM Role                | `Sudo_DevOps`                                                   | Privileged role abused by the attacker for privilege escalation               |
+| IAM User                | `root_admin_adam`                                               | Unauthorized administrative account created for persistence                   |
+| IAM Session             | `sudo_session`                                                  | Session identifier associated with malicious role assumption                  |
+| AWS API Activity        | `DeleteTrail`                                                   | CloudTrail deletion used to evade detection                                   |
+
 
 ---
 
@@ -49,8 +56,15 @@
 
 ## MITRE ATT&CK Mapping:
 
-| ATT&CK ID | Technique                                                | Evidence                                        |
-| --------- | -------------------------------------------------------- | ----------------------------------------------- |
+| ATT&CK ID | Technique                                        | Evidence                                                                                                         |
+| --------- | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------- |
+| T1552.001 | Unsecured Credentials: Credentials In Files      | Attacker retrieved exposed AWS credentials from `shared-docs-repository/technical-specs/devops_kate_accessKeys`  |
+| T1078.004 | Valid Accounts: Cloud Accounts                   | Attacker used compromised AWS credentials associated with `devops_kate` to authenticate into the AWS environment |
+| T1526     | Cloud Service Discovery                          | Attacker used the `ListObjects` API call to enumerate S3 resources                                               |
+| T1078.004 | Valid Accounts: Cloud Accounts                   | Attacker used `AssumeRole` to access the privileged IAM role `Sudo_DevOps` with session name `sudo_session`      |
+| T1136.003 | Create Account: Cloud Account                    | Attacker created the persistent IAM user `root_admin_adam`                                                       |
+| T1098.003 | Account Manipulation: Additional Cloud Roles     | Attacker added `root_admin_adam` to the `Administrators` group to obtain elevated privileges                     |
+| T1562.008 | Impair Defenses: Disable or Modify Cloud Logging | Attacker executed `DeleteTrail` to disable CloudTrail logging and reduce visibility                              |
 
 ---
 
