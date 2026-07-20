@@ -16,7 +16,7 @@
 
 ### Attack Chain: 
 
-                                                          Initial Access
+                                    Initial Access from access key likely leaked in public repo
                                                                 ↓
                                                 Exposed AWS credentials discovered
                                                                 ↓
@@ -30,7 +30,7 @@
                                                                 ↓
                                       Persistence Established, Created IAM User root_admin_adam
                                                                 ↓
-                                        Privilege Expansion, Added User to Administrators Group
+                                        Privilege Escalaton, Added User to Administrators Group
                                                                 ↓
                                                 Defense Evasion, CloudTrail Deleted
 
@@ -107,7 +107,7 @@ There are lots of GetObject calls but one that catches my eye:
 
 ![Q3](screenshots/3.1.png)
 
-The object key of "technical-specs/devops_kate_accessKeys" with the bucket name "shared-docs-repository" is gonna be our winner. Putting it together, the full file path would be "shared-docs-repository/technical-specs/devops_kate_accessKeys"
+The object key of "technical-specs/devops_kate_accessKeys" with the bucket name "shared-docs-repository" is gonna be our winner. Putting it together, the full file path would be "shared-docs-repository/technical-specs/devops_kate_accessKeys." That being said, how he/she got into the cloud instance in the first place is out of the cloudTrail logs' scope. He/she more than likely found a leaked access key in a public repo to gain initial access.
 
 **Answer: shared-docs-repository/technical-specs/devops_kate_accessKeys**
 
